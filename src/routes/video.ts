@@ -7,6 +7,6 @@ router.get('/', getVideos);
 router.get('/:videoId', getVideo);
 
 router.post('/', postVideo);
-router.delete('/video/:videoId', deleteVideo);
+router.delete('/:videoId', deleteVideo);
 
 export default router;
