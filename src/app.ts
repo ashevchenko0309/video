@@ -2,7 +2,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import sequelize from './util/database';
 
-import videoRouter from './routes/video';
+import videoRouter from './routes/video.routes';
 
 const app = express();
 
