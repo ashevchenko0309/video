@@ -23,3 +23,6 @@ sequelize
   })
 
 
+export default app;
+
+
