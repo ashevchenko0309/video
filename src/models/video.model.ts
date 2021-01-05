@@ -18,7 +18,11 @@ const Video = sequelize.define<VideoInterface>('video', {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  videoUrl: {
+  videoFilename: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  thumbFilename: {
     type: DataTypes.STRING,
     allowNull: false
   }
