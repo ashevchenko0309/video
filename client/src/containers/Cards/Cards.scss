@@ -1,0 +1,31 @@
+.cards {
+  width: 70%;
+  height: 100%;
+  margin: 10px auto;
+  .card{
+    margin-bottom: 15px;
+    .card__title{
+      font-size: 1.3em;
+      line-height: 2em;
+    }
+    .card__img{
+      min-height: 150px;
+    }
+    .card__content{
+      p{
+        font-size: 1em;
+        line-height: 1.4em;
+        margin-bottom: 8px;
+      }
+    }
+    .card__link{
+      font-size: 0.95em;
+      line-height: 1.3em;
+      color: rgb(121, 42, 224);
+      font-weight: bold;
+    }
+  }
+}
+
+
+

@@ -1,0 +1,26 @@
+.header{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 15px;
+  background: rgb(121, 42, 224);
+  color: white;
+
+  .header_title{
+    font-size: 1.4em;
+    line-height: 2.2em;
+  }
+
+  .nav{
+    .nav__link{
+      padding: 8px;
+      color: white;
+      text-decoration: none;
+      &.active{
+        text-decoration: underline;
+        font-weight: bold;
+      }
+    }
+  }
+
+}
