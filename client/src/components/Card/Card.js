@@ -1,18 +1,31 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
-function Card({index, data: {id}, width}) {
+function Card({ data: { id, title, description, thumbFilename, videoFilename } }) {
+
+  const path = {
+    pathname: `/video/${id}`,
+    state: { title, description, videoFilename }
+  }
+
   return (
     <div className="card">
-      <h4 className="card__title">Выращиваем желе</h4>
-      <img className="card__img" src="https://helpx.adobe.com/content/dam/help/en/stock/how-to/visual-reverse-image-search/jcr_content/main-pars/image/visual-reverse-image-search-v2_intro.jpg" />
+      <Link className="" to={path}>
+        <img className="card__img" src={`${process.env.REACT_APP_THUMB_HOST}/${thumbFilename}`} />
+      </Link>
       <div className="card__content">
-        <p className="text-truncate text-slice">Чтобы вырастить общительное дружелюбное желе,
-        нам потребуется рулон поролона, два килограмма сахара,
-    три яйца и пол чайной чашки ацетона.</p>
+        <h3 className="card__title">
+          <Link className="text-truncate text-slice" to={path}>{title}</Link>
+        </h3>
+        <p className="text-truncate text-slice">
+          <Link className="" to={path}>
+            {description}
+          </Link>
+        </p>
 
-        <a className="card__link" href="#">Не читать дальше...</a>
+        <Link className="card__link" to={path}>Read more...</Link>
       </div>
-    </div>
+    </div >
   )
 }
 

@@ -7,10 +7,10 @@ import uploadFile from './../util/multer';
 
 const router = Router();
 
-router.get('/', getVideos);
-router.get('/:videoId', getVideo);
+router.get('/video', getVideos);
+router.get('/video/:videoId', getVideo);
 
-router.post('/', uploadFile, [...videoValidation], postVideo);
-router.delete('/:videoId', deleteVideo);
+router.post('/video', uploadFile, [...videoValidation], postVideo);
+router.delete('/video/:videoId', deleteVideo);
 
 export default router;
