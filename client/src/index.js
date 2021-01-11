@@ -10,6 +10,8 @@ import ReactDOM from 'react-dom';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
+import 'bootstrap-4-grid/scss/grid.scss'
+
 ReactDOM.render(
   <React.StrictMode>
     <App />

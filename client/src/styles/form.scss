@@ -1,0 +1,14 @@
+.upload-video__form{
+  .uploaded-video, .video-preview{
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.form-error__hint{
+  padding: 10px;
+  background-color: var(--error-background);
+  color: var(--error-color);
+  border: 2px solid var(--error-color);
+  border-radius: 4px;
+}

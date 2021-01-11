@@ -1,0 +1,80 @@
+body {
+  font-size: var(--text-base-size);
+  font-family: var(--font-primary);
+  color: var(--color-text);
+}
+
+h1,
+h2,
+h3,
+h4,
+form {
+  color: var(--color-text-heading);
+  line-height: var(--heading-line-height);
+}
+
+/* text size */
+
+h1,
+.text--xxl {
+  font-size: var(--text-xxl);
+  line-height: var(--text-xl);
+}
+
+h2,
+.text--xl {
+  font-size: var(--text-xl);
+  line-height: var(--text-xl);
+}
+
+h3,
+.text--lg {
+  font-size: var(--text-lg);
+}
+
+h4,
+.text--md {
+  font-size: var(--text-md);
+}
+
+.text--sm,
+small {
+  font-size: var(--text-sm);
+}
+
+.text--xs {
+  font-size: var(--text-xs);
+}
+
+p {
+  line-height: var(--body-line-height);
+}
+
+a {
+  color: var(--color-link);
+
+  &:visited {
+    color: var(--color-link-visited);
+  }
+}
+
+h2 {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+h3,
+h4 {
+  margin-top: 0.8rem;
+  margin-bottom: 0.4rem;
+}
+
+/* utility classes */
+.text-truncate {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  white-space: normal !important;
+}
+
+.text-slice {
+  -webkit-line-clamp: 2;
+}

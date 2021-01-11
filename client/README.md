@@ -1,3 +1,9 @@
+@TODO:
+- handle all fetch statuses !== 200;
+- handle all errors;
+- handle all loadings;
+- TESTS!!!
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

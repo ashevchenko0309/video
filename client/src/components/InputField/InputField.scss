@@ -1,0 +1,18 @@
+.form_field--input{
+  display: block;
+  width: 100%;
+}
+
+.input_field--hint{
+  float: right;
+}
+
+.input_field--error{
+  color: rgb(194, 17, 17);
+  &.inactive{
+    display: none !important;
+  }
+  &.active{
+    display: initial;
+  }
+}

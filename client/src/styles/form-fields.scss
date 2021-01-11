@@ -1,0 +1,66 @@
+// Learn about this solution to creating custom select styles:
+// @link https://moderncss.dev/custom-css-styles-for-form-inputs-and-textareas/
+
+.form_field{
+  margin-bottom: 0.8rem;
+}
+
+.form_field--input, .form_field--textarea, .form_field--upload {
+  font-size: 16px;
+  // Capitalized to prevent Sass
+  // thinking it's the Sass max()
+  font-size: Max(16px, 1em);
+  font-family: inherit;
+  padding: 0.25em 0.5em;
+  background-color: #fff;
+  border: 2px solid var(--input-border);
+  border-radius: 4px;
+  margin-top: 0.2rem;
+}
+
+.form_field--input:not(textarea) {
+  line-height: 1;
+  height: 2.25rem;
+}
+
+.form_field--upload {
+  width: 100%;
+}
+
+.form_field--textarea {
+  resize: none;
+}
+
+.form_field--input[disabled] {
+  --input-border: #ccc;
+  background-color: #eee;
+  cursor: not-allowed;
+}
+
+.input_field--label {
+  font-size: 1.125rem;
+  line-height: 1;
+  font-weight: 500;
+}
+
+.input_field--hint{
+  font-size: 0.825rem;
+  font-weight: 500;
+  line-height: 1.5;
+  color: var(--hint-color);
+}
+
+.form_field{
+
+  &.has-error{
+    color: red;
+
+    .form_field--input, .form_field--textarea, .form_field--upload{
+      border-color: var(--error-color);
+    }
+    
+    .form_field--input, .input_field--label, .input_field--hint, .form_field--textarea, .form_field--upload{
+      color: var(--error-color);
+    }
+  }
+}

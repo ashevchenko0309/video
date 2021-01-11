@@ -1,0 +1,19 @@
+.card {
+  a {
+    text-decoration: none;
+  }
+  .card__title {
+    font-weight: 600;
+    text-transform: capitalize;
+    font-size: var(--text-md);
+    line-height: var(--text-md);
+    margin: 0;
+  }
+  .card__content {
+    .card__link {
+      color: var(--primary-color);
+      line-height: var(--text-lg);
+      font-weight: 600;
+    }
+  }
+}

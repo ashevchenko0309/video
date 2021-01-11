@@ -1,0 +1,33 @@
+:root {
+  --primary-color: rgb(121, 42, 224);
+  --text-color: #ffffff;
+  --input-border: #8b8a8b;
+  --hint-color: #5d5d5d;
+  --error-background: #b9262657;
+  --error-color: #b92626;
+  --submit-button-background: #3e8547;
+  --submit-button-color: #ffffff;
+
+  // typo
+  --font-primary: sans-serif;
+  --font-secondary: serif;
+
+  --text-base-size: 1em;
+  --text-scale-ratio: 1.2;
+
+  --text-xs: calc(1em / (var(--text-scale-ratio) * var(--text-scale-ratio)));
+  --text-sm: calc(1em / var(--text-scale-ratio));
+  --text-md: calc(1em * var(--text-scale-ratio));
+  --text-lg: calc(1em * var(--text-scale-ratio) * var(--text-scale-ratio));
+  --text-xl: calc(1em * var(--text-scale-ratio) * var(--text-scale-ratio) * var(--text-scale-ratio));
+  --text-xxl: calc(
+    1em * var(--text-scale-ratio) * var(--text-scale-ratio) * var(--text-scale-ratio) * var(--text-scale-ratio)
+  );
+  --text-xxxl: calc(
+    1em * var(--text-scale-ratio) * var(--text-scale-ratio) * var(--text-scale-ratio) * var(--text-scale-ratio) *
+      var(--text-scale-ratio)
+  );
+
+  --heading-line-height: 1.2;
+  --body-line-height: 1.4;
+}

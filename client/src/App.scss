@@ -1,4 +1,21 @@
 @import './styles/reset.scss';
+@import './styles/variebles.scss';
+@import './styles/buttons.scss';
+@import './styles/typography.scss';
+@import './styles/form.scss';
+@import './styles/form-fields.scss';
+@import './styles/flex.scss';
+@import './styles/common.scss';
+
+@import './styles/page.scss';
+@import './styles/header.scss';
+@import './styles/card.scss';
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
 
 body {
   margin: 0;
@@ -14,25 +31,7 @@ code {
     monospace;
 }
 
-img{
+img, video, canvas{
+  width: 100%;
   max-width: 100%;
-}
-
-.truncate {
-  width: 250px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.text-truncate{
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: normal;
-}
-
-.text-slice{
-  -webkit-line-clamp: 2;
 }
