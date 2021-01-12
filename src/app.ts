@@ -8,7 +8,7 @@ import sequelize from './util/database';
 import videoRouter from './routes/video.routes';
 
 const CLIENT_FOLDER = path.join(__dirname, '..', 'client', 'build');
-const CLIENT_INDEX = path.join(CLIENT_FOLDER, 'index.html');
+const CACHE_TIME = 86400000 * 30;
 
 const app = express();
 
@@ -20,17 +20,13 @@ if (process.env.NODE_ENV === 'development') {
 
 app.use(express.static(CLIENT_FOLDER));
 
-app.use('/videos', express.static(path.join(__dirname, '..', 'uploads', 'videos'), { maxAge: 86400000 * 30 }));
-app.use('/thumbs', express.static(path.join(__dirname, '..', 'uploads', 'thumbs'), { maxAge: 86400000 * 30 }));
+app.use('/videos', express.static(path.join(__dirname, '..', 'uploads', 'videos'), { maxAge: CACHE_TIME }));
+app.use('/thumbs', express.static(path.join(__dirname, '..', 'uploads', 'thumbs'), { maxAge: CACHE_TIME }));
 
 app.use('/api', videoRouter);
 
-// app.get('/*', function (req, res) {
-  // res.sendFile(CLIENT_INDEX);
-// });
-
 sequelize
-  .sync() //{force: true}
+  .sync()
   .then(() => app.listen(3000))
   .catch(err => {
     console.error(err);

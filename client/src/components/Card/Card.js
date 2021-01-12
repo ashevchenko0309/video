@@ -11,7 +11,7 @@ function Card({ data: { id, title, description, thumbFilename, videoFilename } }
   return (
     <div className="card">
       <Link className="" to={path}>
-        <img className="card__img" src={`${process.env.REACT_APP_THUMB_HOST}/${thumbFilename}`} />
+        <img className="card__img" src={`${process.env.REACT_APP_THUMB_HOST}/${thumbFilename}`} alt={thumbFilename} />
       </Link>
       <div className="card__content">
         <h3 className="card__title">
