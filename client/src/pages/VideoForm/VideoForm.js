@@ -1,8 +1,6 @@
-import React, { useReducer, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import React from 'react';
 
-import { initState, reducer, actions } from './video-form.reducer';
-import FORM_SCHEMA, { isValidTitle, isValidDescription } from './video-from.helpers';
+import FORM_SCHEMA, { isValidLength } from './video-from.helpers';
 
 import Container from '../../components/Grid/Container';
 import Row from '../../components/Grid/Row';
@@ -12,33 +10,50 @@ import TextareaField from './../../components/TextareaField/TextareaField';
 import VideoUploader from './../../components/VideoUploader/VideoUploader';
 import FormErrorHint from './../../components/FormErrorHints/FormErrorHint';
 
+
 import dataURLtoFile from './../../utils/dataUrlToFile';
 
-function VideoFrom() {
+class VideoFrom extends React.Component {
 
-  const [state, dispatch] = useReducer(reducer, initState);
-  const [formError, setFormError] = useState(null);
-  const history = useHistory();
+  state = {
+    formError: null,
+    title: {
+      hasError: null,
+      errorMessage: '',
+    },
+    description: {
+      hasError: null,
+      errorMessage: '',
+    },
+    video: {
+      hasError: null,
+      errorMessage: '',
+    }
+  }
 
-  const onSubmit = (e) => {
+
+  onSubmit = (e) => {
     e.preventDefault();
 
-    const { title, description, video } = state;
+    const { title, description, video } = this.state;
 
-    if (title.hasError || description.hasError || video.hasError) {
-      return setFormError('Some form field(s) is invalid');
+    if (
+      (title.hasError || title.hasError === null) ||
+      (description.hasError || description.hasError === null) ||
+      (video.hasError || video.hasError === null)
+    ) {
+      return this.setState({ formError: 'Some form field(s) is invalid or empty' });
     } else {
-      if (formError) {
-        setFormError(null);
+      if (this.state.formError) {
+        this.setState({ formError: null });
       }
     }
 
     const elements = e.currentTarget.elements;
 
     const videoFile = elements.video.files[0];
-
     if (!videoFile) {
-      return dispatch({ type: actions.ON_VALIDATE_VIDEO_UPLOAD, payload: { hasError: true, errorMessage: `Must have video file` } })
+      return this.setState({ video: { hasError: true, errorMessage: `Must have video file` } });
     }
 
     const videoTitle = elements.title.value;
@@ -50,92 +65,95 @@ function VideoFrom() {
     formData.append("description", videoDescription);
     formData.append("video", videoFile);
     formData.append("thumb", dataURLtoFile(thumbUrlData, 'thumb'));
+    this.onPostData(formData)
+  }
 
+  onPostData = (formData) => {
     fetch(`${process.env.REACT_APP_API_HOST}/video`, {
       method: "POST",
       body: formData
     })
       .then(response => response.json())
-      .then(data => {
-        if (data.errors && data.errors.length) {
-          return setFormError(data.errors.map(error => `${error.param} - ${error.msg}`).join('; '))
-        }
-        history.replace(`/video/${data.video.id}`, { ...data.video })
-      })
+      .then(this.onFulfilledPost)
       .catch(e => console.error(e))
   }
 
-  const onTitleChange = (value) => {
-    dispatch({ type: actions.ON_CHANGE_TITLE, payload: { value, hasError: false, errorMessage: '' } })
+  onFulfilledPost = (data) => {
+    if (data.errors && data.errors.length) {
+      return this.setState({ formError: data.errors.map(error => `${error.param} - ${error.msg}`).join('; ') });
+    }
+    this.props.history.replace(`/video/${data.video.id}`, { ...data.video })
   }
 
-  const onTitleBlur = (value) => {
-    if (FORM_SCHEMA.title.isRequired) {
-      const validationResult = isValidTitle(value);
+  onFieldBlur = (value, fieldName) => {
+    const fieldSettings = FORM_SCHEMA[fieldName];
 
-      if (validationResult.hasError) {
-        return dispatch({ type: actions.ON_CHANGE_TITLE, payload: { ...validationResult } })
-      } else {
-        return dispatch({ type: actions.ON_CHANGE_TITLE, payload: { ...validationResult } })
+    if(!fieldSettings) return null;
+
+    if (fieldSettings.isRequired) {
+      const validationResult = isValidLength(value, fieldSettings.options, `Field value must be between ${fieldSettings.options.minLength} to ${fieldSettings.options.maxLength}`);
+
+      switch (fieldName) {
+        case 'title':
+          this.setState({ title: { ...validationResult } });
+          break;
+        case 'description':
+          this.setState({ description: { ...validationResult } });
+          break;
       }
     }
   }
 
-  const onDescriptionChange = (value) => {
-    dispatch({ type: actions.ON_CHANGE_DESCRIPTION, payload: { value, hasError: false, errorMessage: '' } })
+  onTitleChange = (value) => {
+    this.setState({ title: { hasError: false, errorMessage: '' } });
   }
 
-  const onDescriptionBlur = (value) => {
-    if (FORM_SCHEMA.description.isRequired) {
-      const validationResult = isValidDescription(value);
-
-      if (validationResult.hasError) {
-        return dispatch({ type: actions.ON_CHANGE_DESCRIPTION, payload: { ...validationResult } })
-      } else {
-        return dispatch({ type: actions.ON_CHANGE_DESCRIPTION, payload: { ...validationResult } })
-      }
-    }
+  onDescriptionChange = (value) => {
+    this.setState({ description: { hasError: false, errorMessage: '' } });
   }
 
-  const onVideoChange = () => {
-    dispatch({ type: actions.ON_CHANGE_VIDEO_UPLOAD, payload: { hasError: false, errorMessage: '' } })
+  onVideoChange = () => {
+    this.setState({ video: { hasError: false, errorMessage: '' } });
   }
 
-  return (
-    <Container>
-      <Row>
-        <Column>
-          <h2>Create new video</h2>
-          <form className="upload-video__form" onSubmit={onSubmit}>
-            <InputField
-              {...FORM_SCHEMA.title}
-              defaultValue={state.title.value}
-              errorMessage={state.title.errorMessage}
-              hasError={state.title.hasError}
-              onChange={onTitleChange}
-              onBlur={onTitleBlur}
-            />
-            <TextareaField
-              {...FORM_SCHEMA.description}
-              defaultValue={state.description.value}
-              errorMessage={state.description.errorMessage}
-              hasError={state.description.hasError}
-              onChange={onDescriptionChange}
-              onBlur={onDescriptionBlur}
-            />
-            <VideoUploader
-              {...FORM_SCHEMA.video}
-              onFileUpload={onVideoChange}
-              errorMessage={state.video.errorMessage}
-              hasError={state.video.hasError}
-            />
-            {formError && <FormErrorHint errorMessage={formError} />}
-            <button className="button form_button--submit" type="submit">Submit</button>
-          </form>
-        </Column>
-      </Row>
-    </Container>
-  )
+
+  render() {
+    return (
+      <Container>
+        <Row>
+          <Column>
+            <h2>Create new video</h2>
+            <form className="upload-video__form" onSubmit={this.onSubmit}>
+              <InputField
+                {...FORM_SCHEMA.title}
+                defaultValue={this.state.title.value}
+                errorMessage={this.state.title.errorMessage}
+                hasError={this.state.title.hasError}
+                onChange={this.onTitleChange}
+                onBlur={this.onFieldBlur}
+              />
+              <TextareaField
+                {...FORM_SCHEMA.description}
+                defaultValue={this.state.description.value}
+                errorMessage={this.state.description.errorMessage}
+                hasError={this.state.description.hasError}
+                onChange={this.onDescriptionChange}
+                onBlur={this.onFieldBlur}
+              />
+              <VideoUploader
+                {...FORM_SCHEMA.video}
+                onFileUpload={this.onVideoChange}
+                errorMessage={this.state.video.errorMessage}
+                hasError={this.state.video.hasError}
+              />
+              {this.state.formError && <FormErrorHint errorMessage={this.state.formError} />}
+              <button className="button form_button--submit" type="submit">Submit</button>
+            </form>
+          </Column>
+        </Row>
+      </Container>
+    )
+  }
 }
 
 export default VideoFrom;

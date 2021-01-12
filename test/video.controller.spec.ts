@@ -13,10 +13,10 @@ describe("Video controller", () => {
         .expect(201, done);
   })
 
-  it("GET /api/video should return 400", (done) => {
+  it("GET /api/video should return 422", (done) => {
     request(app)
       .get("/api/video")
-      .expect(400, done);
+      .expect(422, done);
   });
 
   it("GET /api/video with pagi should return 200", (done) => {

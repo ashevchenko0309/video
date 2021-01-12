@@ -26,28 +26,16 @@ const FORM_SCHEMA = {
   }
 }
 
-export const isValidTitle = (value) => {
-  if (value.length > FORM_SCHEMA.title.options.maxLength) {
-    return { value, hasError: true, errorMessage: `Video title cannot be greater than ${FORM_SCHEMA.title.options.maxLength}` }
+export const isValidLength = (value, options, errorMessage) => {
+  if (value.length > options.maxLength) {
+    return { hasError: true, errorMessage }
   }
 
-  if (value.length < FORM_SCHEMA.title.options.minLength) {
-    return { value, hasError: true, errorMessage: `Video title cannot be less than ${FORM_SCHEMA.title.options.minLength}` }
+  if (value.length < options.minLength) {
+    return { hasError: true, errorMessage }
   }
 
-  return { value, hasError: false, errorMessage: '' };
-}
-
-export const isValidDescription = (value) => {
-  if (value.length > FORM_SCHEMA.description.options.maxLength) {
-    return { value, hasError: true, errorMessage: `Video description cannot be greater than ${FORM_SCHEMA.title.options.maxLength}` }
-  }
-
-  if (value.length < FORM_SCHEMA.description.options.minLength) {
-    return { value, hasError: true, errorMessage: `Video description cannot be less than ${FORM_SCHEMA.title.options.minLength}` }
-  }
-
-  return { value, hasError: false, errorMessage: '' };
+  return { hasError: false, errorMessage: '' };
 }
 
 export default FORM_SCHEMA

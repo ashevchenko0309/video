@@ -3,21 +3,20 @@ import { throttle } from 'lodash';
 import classNames from 'classnames';
 
 import FormFieldErrorHint from '../FormErrorHints/FormFieldErrorHint';
-import './InputField.scss';
 
 function InputField({
-  type = "text",
-  name = '',
-  defaultValue = '',
-  placeholder = '',
-  labelText = '',
-  isRequired = false,
-  options = null,
-  hasError = false,
-  delay = 150,
-  errorMessage = '',
-  onChange = () => { },
-  onBlur = () => { }
+  type,
+  name,
+  defaultValue,
+  placeholder,
+  labelText,
+  isRequired,
+  options,
+  hasError,
+  delay,
+  errorMessage,
+  onChange,
+  onBlur,
 }) {
 
   const [inputValue, setInputValue] = useState(defaultValue);
@@ -39,13 +38,13 @@ function InputField({
 
   const _onBlur = (e) => {
     const value = e.currentTarget.value;
-    onBlur(value);
+    onBlur(value, name);
   }
 
   return (
     <div className={formFieldClass}>
       <label htmlFor={name}>
-        <span className="input_field--label">{labelText} {isRequired && <span className="is-required">*</span>}</span>
+        <span className="input_field--label">{labelText}{isRequired && <span className="is-required"> *</span>}</span>
         <span className="input_field--hint">{inputValue.length} / {_options.maxLength}</span>
         <input
           type={type}
@@ -63,6 +62,21 @@ function InputField({
     </div>
   )
 
+}
+
+InputField.defaultProps = {
+  type: "text",
+  name: '',
+  defaultValue: '',
+  placeholder: '',
+  labelText: '',
+  isRequired: false,
+  options: null,
+  hasError: false,
+  delay: 150,
+  errorMessage: '',
+  onChange: () => { },
+  onBlur: () => { }
 }
 
 export default InputField;

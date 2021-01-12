@@ -2,21 +2,20 @@ import React, { useState, useCallback } from 'react';
 import { throttle } from 'lodash';
 import classNames from 'classnames';
 
-import FormFieldErrorHint from '../FormErrorHints/FormFieldErrorHint'
-import './TextareaField.scss'
+import FormFieldErrorHint from '../FormErrorHints/FormFieldErrorHint';
 
 function TextareaField({
-  name = '',
-  defaultValue = '',
-  placeholder = '',
-  labelText = '',
-  isRequired = false,
-  options = null,
-  hasError = false,
-  delay = 150,
-  errorMessage = '',
-  onChange = () => { },
-  onBlur = () => { },
+  name,
+  defaultValue,
+  placeholder,
+  labelText,
+  isRequired,
+  options,
+  hasError,
+  delay,
+  errorMessage,
+  onChange,
+  onBlur,
 }) {
 
   const [textareaValue, setTextareaValue] = useState(defaultValue);
@@ -38,13 +37,13 @@ function TextareaField({
 
   const _onBlur = (e) => {
     const value = e.currentTarget.value;
-    onBlur(value)
+    onBlur(value, name);
   }
 
   return (
     <div className={formFieldClass}>
       <label htmlFor={name}>
-        <span className="input_field--label">{labelText}</span>
+        <span className="input_field--label">{labelText}{isRequired && <span className="is-required"> *</span>}</span>
         <span className="input_field--hint">{textareaValue.length} / {_options.maxLength}</span>
         <textarea
           className="form_field--textarea"
@@ -60,6 +59,20 @@ function TextareaField({
       <FormFieldErrorHint hasError={hasError} errorMessage={errorMessage} />
     </div>
   )
+}
+
+TextareaField.defaultProps = {
+  name: '',
+  defaultValue: '',
+  placeholder: '',
+  labelText: '',
+  isRequired: false,
+  options: null,
+  hasError: false,
+  delay: 150,
+  errorMessage: '',
+  onChange: () => { },
+  onBlur: () => { },
 }
 
 export default TextareaField

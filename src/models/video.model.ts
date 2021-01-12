@@ -1,5 +1,5 @@
 import {DataTypes} from 'sequelize';
-import VideoInterface from '../interfaces/video.interface';
+import VideoInterface from '../types/video.types';
 
 import sequelize from '../util/database';
 
