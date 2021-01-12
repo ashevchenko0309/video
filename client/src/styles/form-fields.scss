@@ -7,8 +7,7 @@
 
 .form_field--input, .form_field--textarea, .form_field--upload {
   font-size: 16px;
-  // Capitalized to prevent Sass
-  // thinking it's the Sass max()
+  width: 100%;
   font-size: Max(16px, 1em);
   font-family: inherit;
   padding: 0.25em 0.5em;
@@ -29,6 +28,8 @@
 
 .form_field--textarea {
   resize: none;
+  display: block;
+  width: 100%;
 }
 
 .form_field--input[disabled] {
@@ -44,6 +45,7 @@
 }
 
 .input_field--hint{
+  float: right;
   font-size: 0.825rem;
   font-weight: 500;
   line-height: 1.5;

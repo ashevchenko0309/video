@@ -1,0 +1,69 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`InputField component should render default input (snapshot) 1`] = `
+<InputField
+  defaultValue=""
+  delay={150}
+  errorMessage=""
+  hasError={false}
+  isRequired={false}
+  labelText="Test label"
+  name="Test"
+  onBlur={[Function]}
+  onChange={[Function]}
+  options={null}
+  placeholder="Test placeholder"
+  type="text"
+/>
+`;
+
+exports[`InputField component should render input with default value (snapshot) 1`] = `
+<InputField
+  defaultValue="default value"
+  delay={150}
+  errorMessage=""
+  hasError={false}
+  isRequired={false}
+  labelText="Test label"
+  name="Test"
+  onBlur={[Function]}
+  onChange={[Function]}
+  options={null}
+  placeholder="Test placeholder"
+  type="text"
+/>
+`;
+
+exports[`InputField component should render input with error message (snapshot) 1`] = `
+<InputField
+  defaultValue=""
+  delay={150}
+  errorMessage="Some error"
+  hasError={true}
+  isRequired={false}
+  labelText="Test label"
+  name="Test"
+  onBlur={[Function]}
+  onChange={[Function]}
+  options={null}
+  placeholder="Test placeholder"
+  type="text"
+/>
+`;
+
+exports[`InputField component should render textarea with all props (snapshot) 1`] = `
+<InputField
+  defaultValue="default value"
+  delay={150}
+  errorMessage="Some error"
+  hasError={true}
+  isRequired={false}
+  labelText="Test label"
+  name="Test"
+  onBlur={[Function]}
+  onChange={[Function]}
+  options={null}
+  placeholder="Test placeholder"
+  type="text"
+/>
+`;
