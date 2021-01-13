@@ -1,11 +1,12 @@
-import React from 'react';
+import React from "react"
+import PropTypes from "prop-types"
 
 function Row({ children }) {
-  return (
-    <div className="row">
-      {children}
-    </div>
-  )
+  return <div className="row">{children}</div>
 }
 
-export default Row;
+Row.propTypes = {
+  children: PropTypes.element.isRequired,
+}
+
+export default Row

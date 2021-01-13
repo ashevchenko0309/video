@@ -5,10 +5,18 @@
   "dependencies": {
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/user-event": "^12.1.10",
+    "bootstrap-4-grid": "^3.4.0",
+    "classnames": "^2.2.6",
+    "core-js": "^3.8.2",
+    "lodash": "^4.17.20",
+    "masonic": "^3.4.0",
     "node-sass": "^4.14.1",
+    "prop-types": "^15.7.2",
     "react": "^17.0.1",
+    "react-app-polyfill": "^2.0.0",
     "react-dom": "^17.0.1",
     "react-router-dom": "^5.2.0",
+    "react-router-prop-types": "^1.0.5",
     "react-scripts": "4.0.1",
     "web-vitals": "^0.2.4"
   },
@@ -16,13 +24,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --coverage",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
+    "eject": "react-scripts eject",
+    "lint": "eslint ./src",
+    "lint:fix": "eslint ./src --fix"
   },
   "browserslist": {
     "production": [
@@ -49,6 +53,10 @@
     "@wojtekmaj/enzyme-adapter-react-17": "^0.4.1",
     "babel-jest": "^26.6.3",
     "enzyme": "^3.11.0",
+    "eslint-config-airbnb": "^18.2.1",
+    "eslint-config-prettier": "^7.1.0",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
+    "eslint-plugin-prettier": "^3.3.1",
     "prettier": "^2.2.1",
     "react-test-renderer": "^17.0.1"
   }

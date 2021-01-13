@@ -1,11 +1,17 @@
-import React from 'react';
+import React from "react"
+import PropTypes from "prop-types"
 
-function Column({ classNameSize = "col-12", children }) {
-  return (
-    <div className={classNameSize}>
-      {children}
-    </div>
-  )
+function Column({ children, classNameSize }) {
+  return <div className={classNameSize}>{children}</div>
 }
 
-export default Column;
+Column.propTypes = {
+  children: PropTypes.element.isRequired,
+  classNameSize: PropTypes.string,
+}
+
+Column.defaultProps = {
+  classNameSize: "col-12",
+}
+
+export default Column
