@@ -1,9 +1,9 @@
-import React from 'react';
-import PageTitle from './PageTitle';
-import Navigation from './Navigation';
+import React from "react"
+import PageTitle from "./PageTitle"
+import Navigation from "./Navigation"
 
 function Header() {
-  return(
+  return (
     <div className="header">
       <PageTitle />
       <Navigation />
@@ -11,4 +11,4 @@ function Header() {
   )
 }
 
-export default Header;
+export default Header

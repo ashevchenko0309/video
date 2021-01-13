@@ -1,26 +1,30 @@
-import React, { useState } from 'react';
-import Card from '../Card/Card';
-import { Masonry, useInfiniteLoader } from 'masonic';
+import React, { useState } from "react"
+import PropTypes from "prop-types"
+import { Masonry, useInfiniteLoader } from "masonic"
+import Card from "../Card/Card"
 
 function Cards({ initVideos = [], totalVideos = 0 }) {
-
-  const [items, setItems] = useState([...initVideos]);
+  const [videos, setVideos] = useState([...initVideos])
 
   const fetchMoreItems = async (startIndex, stopIndex) => {
-    const nextItems = await fetch(`${process.env.REACT_APP_API_HOST}/video?start=${startIndex}&end=${stopIndex + 1}`).then(response => response.json());
-    setItems((current) => [...current, ...nextItems.videos])
+    const nextItems = await fetch(
+      `${process.env.REACT_APP_API_HOST}/video?start=${startIndex}&end=${
+        stopIndex + 1
+      }`
+    ).then((response) => response.json())
+    setVideos((current) => [...current, ...nextItems.videos])
   }
 
   const maybeLoadMore = useInfiniteLoader(fetchMoreItems, {
     isItemLoaded: (index, items) => !!items[index],
     minimumBatchSize: 32,
     threshold: 3,
-    totalItems: totalVideos
+    totalItems: totalVideos,
   })
 
   return (
     <Masonry
-      items={items}
+      items={videos}
       onRender={maybeLoadMore}
       render={Card}
       columnGutter={15}
@@ -30,4 +34,14 @@ function Cards({ initVideos = [], totalVideos = 0 }) {
   )
 }
 
-export default React.memo(Cards);
+Cards.propTypes = {
+  initVideos: PropTypes.shape([]),
+  totalVideos: PropTypes.number,
+}
+
+Cards.defaultProps = {
+  initVideos: [],
+  totalVideos: 0,
+}
+
+export default React.memo(Cards)

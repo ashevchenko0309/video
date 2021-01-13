@@ -1,11 +1,11 @@
-import React from "react";
-import { BrowserRouter as Router, Switch } from "react-router-dom";
+import React from "react"
+import { BrowserRouter as Router, Switch } from "react-router-dom"
 
-import Header from './components/Header/Header';
+import Header from "./components/Header/Header"
 
-import RouterMapper from './routes';
+import RouterMapper from "./routes"
 
-import './App.scss';
+import "./App.scss"
 
 function App() {
   return (
@@ -17,7 +17,7 @@ function App() {
         </Switch>
       </div>
     </Router>
-  );
+  )
 }
 
-export default App;
+export default App

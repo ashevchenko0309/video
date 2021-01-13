@@ -1,8 +1,9 @@
-import React, { useState, useCallback } from 'react';
-import { throttle } from 'lodash';
-import classNames from 'classnames';
+import React, { useState, useCallback } from "react"
+import PropTypes from "prop-types"
+import { throttle } from "lodash"
+import classNames from "classnames"
 
-import FormFieldErrorHint from '../FormErrorHints/FormFieldErrorHint';
+import FormFieldErrorHint from "../FormErrorHints/FormFieldErrorHint"
 
 function InputField({
   type,
@@ -18,34 +19,43 @@ function InputField({
   onChange,
   onBlur,
 }) {
+  const [inputValue, setInputValue] = useState(defaultValue)
 
-  const [inputValue, setInputValue] = useState(defaultValue);
+  const throttledInputChange = useCallback(
+    throttle((v) => onChange(v), delay),
+    []
+  )
 
-  const throttledInputChange = useCallback(throttle(v => onChange(v), delay), []);
+  const defaultValidation = { minLength: isRequired ? 1 : 0, maxLength: 120 }
 
-  const _options = options || { minLength: isRequired ? 1 : 0, maxLength: 120 };
+  const validationOptions = options || defaultValidation
 
   const formFieldClass = classNames({
-    "form_field": true,
-    "has-error": hasError
+    form_field: true,
+    "has-error": hasError,
   })
 
-  const _onChange = (e) => {
-    const value = e.currentTarget.value;
-    setInputValue(value);
-    throttledInputChange(value);
+  const onChangeHandler = (e) => {
+    const { value } = e.currentTarget
+    setInputValue(value)
+    throttledInputChange(value)
   }
 
-  const _onBlur = (e) => {
-    const value = e.currentTarget.value;
-    onBlur(value, name);
+  const onBlurHandler = (e) => {
+    const { value } = e.currentTarget
+    onBlur(value, name)
   }
 
   return (
     <div className={formFieldClass}>
       <label htmlFor={name}>
-        <span className="input_field--label">{labelText}{isRequired && <span className="is-required"> *</span>}</span>
-        <span className="input_field--hint">{inputValue.length} / {_options.maxLength}</span>
+        <span className="input_field--label">
+          {labelText}
+          {isRequired && <span className="is-required"> *</span>}
+        </span>
+        <span className="input_field--hint">
+          {inputValue.length} / {validationOptions.maxLength}
+        </span>
         <input
           type={type}
           className="form_field--input"
@@ -53,30 +63,44 @@ function InputField({
           name={name}
           placeholder={placeholder}
           required={isRequired}
-          maxLength={_options.maxLength}
-          onChange={_onChange}
-          onBlur={_onBlur}
+          maxLength={validationOptions.maxLength}
+          onChange={onChangeHandler}
+          onBlur={onBlurHandler}
         />
       </label>
       <FormFieldErrorHint hasError={hasError} errorMessage={errorMessage} />
     </div>
   )
+}
 
+InputField.propTypes = {
+  type: PropTypes.string,
+  name: PropTypes.string,
+  defaultValue: PropTypes.string,
+  placeholder: PropTypes.string,
+  labelText: PropTypes.string,
+  errorMessage: PropTypes.string,
+  isRequired: PropTypes.bool,
+  hasError: PropTypes.bool,
+  delay: PropTypes.number,
+  options: PropTypes.shape({}),
+  onChange: PropTypes.func,
+  onBlur: PropTypes.func,
 }
 
 InputField.defaultProps = {
   type: "text",
-  name: '',
-  defaultValue: '',
-  placeholder: '',
-  labelText: '',
+  name: "",
+  defaultValue: "",
+  placeholder: "",
+  labelText: "",
   isRequired: false,
   options: null,
   hasError: false,
   delay: 150,
-  errorMessage: '',
-  onChange: () => { },
-  onBlur: () => { }
+  errorMessage: "",
+  onChange: () => {},
+  onBlur: () => {},
 }
 
-export default InputField;
+export default InputField

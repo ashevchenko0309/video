@@ -2,17 +2,17 @@
 // allows you to do things like:
 // expect(element).toHaveTextContent(/react/i)
 // learn more: https://github.com/testing-library/jest-dom
-import '@testing-library/jest-dom';
-import Enzyme, { shallow, render, mount } from 'enzyme';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
+import "@testing-library/jest-dom"
+import Enzyme, { shallow, render, mount } from "enzyme"
+import Adapter from "@wojtekmaj/enzyme-adapter-react-17"
 
-Enzyme.configure({ adapter: new Adapter() });
+Enzyme.configure({ adapter: new Adapter() })
 
-global.shallow = shallow;
-global.render = render;
-global.mount = mount;
+global.shallow = shallow
+global.render = render
+global.mount = mount
 
 // Fail tests on any warning
-console.error = message => {
-    throw new Error(message);
-};
+console.error = (message) => {
+  throw new Error(message)
+}
