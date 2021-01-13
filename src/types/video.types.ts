@@ -1,4 +1,4 @@
-import {Model} from 'sequelize';
+import { Model } from 'sequelize';
 
 interface Video extends Model {
   id: number,
@@ -10,7 +10,7 @@ interface Video extends Model {
   updatedAt: string,
 }
 
-type VideoDBResponse = Video | null
+type VideoDBResponse = Video | null;
 
 type VideoRequestParam = { videoId: string };
 

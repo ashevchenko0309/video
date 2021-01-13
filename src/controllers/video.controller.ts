@@ -7,8 +7,8 @@ import Video from '../models/video.model';
 import VideoInterface, { VideoRequestParam, VideoRequestQuery, VideoDBResponse } from '../types/video.types';
 import { PaginationOptionsResult } from '../types/pagination.types';
 
-import { getPaginationOptions } from './../util/pagination';
-import { requestValidationHandler } from './../validations/video.validation';
+import getPaginationOptions from '../util/pagination';
+import { requestValidationHandler } from '../validations/video.validation';
 import deleteVideoFiles from '../util/delete-video-files';
 
 export const getVideos = (req: Request, res: Response) => {
@@ -19,14 +19,14 @@ export const getVideos = (req: Request, res: Response) => {
     return errorResponseMaster({ response: res, errCode: 422, error: pagiOption });
   }
 
-  Promise
+  return Promise
     .all([
       Video.count(),
-      Video.findAll({ ...pagiOption })
+      Video.findAll({ ...pagiOption }),
     ])
     .then(([total, videos]) => res.status(200).json({ videos, total }))
-    .catch(err => errorResponseMaster({ response: res, errCode: 500, error: err }));
-}
+    .catch((err) => errorResponseMaster({ response: res, errCode: 500, error: err }));
+};
 
 export const getVideo = (req: Request, res: Response) => {
   const { videoId = 0 } = req.params as VideoRequestParam;
@@ -35,47 +35,53 @@ export const getVideo = (req: Request, res: Response) => {
     return errorResponseMaster({ response: res, errCode: 404 });
   }
 
-  Video.findByPk(videoId)
+  return Video.findByPk(videoId)
     .then((video: VideoDBResponse) => {
       if (!video) {
         return errorResponseMaster({ response: res, errCode: 404 });
       }
 
-      res.status(200).json({ video });
+      return res.status(200).json({ video });
     })
-    .catch(err => errorResponseMaster({ response: res, errCode: 500, error: err }))
-}
+    .catch((err) => errorResponseMaster({ response: res, errCode: 500, error: err }));
+};
 
-export const postVideo = (req: Request, res: Response) => {
+export const postVideo = (req: Request, res: Response) => (
   requestValidationHandler(req)
     .then((filanames: string[]) => {
       const { title, description } = req.body as VideoInterface;
 
       const [videoFilename, thumbFilename] = filanames;
 
-      return Video.create({ title, description, videoFilename, thumbFilename })
+      return Video.create({
+        title, description, videoFilename, thumbFilename,
+      })
         .then((video: VideoInterface) => res.status(201).json({ video }))
-        .catch((err) => errorResponseMaster({ response: res, errCode: 500, error: err }))
+        .catch((err) => errorResponseMaster({ response: res, errCode: 500, error: err }));
     })
-    .catch(err => errorResponseMaster({ response: res, errCode: err.code, error: null, body: { message: err.msg.toString() } }))
-}
+    .catch((err) => errorResponseMaster({
+      response: res, errCode: err.code, error: null, body: { message: err.msg.toString() },
+    }))
+);
 
 export const deleteVideo = (req: Request, res: Response) => {
-
   const { videoId = 0 } = req.params as VideoRequestParam;
   if (videoId === 0) {
-    return errorResponseMaster({ response: res, errCode: 404 })
+    return errorResponseMaster({ response: res, errCode: 404 });
   }
 
-  Video.findByPk(videoId)
+  return Video.findByPk(videoId)
     .then((video: VideoDBResponse): any => {
       if (!video) {
         return errorResponseMaster({ response: res, errCode: 404 });
       }
       const { videoFilename, thumbFilename } = video;
-      return deleteVideoFiles({ video: [{ filename: videoFilename }], thumb: [{ filename: thumbFilename }] });
+      return deleteVideoFiles({
+        video: [{ filename: videoFilename }],
+        thumb: [{ filename: thumbFilename }],
+      });
     })
     .then(() => Video.destroy({ where: { id: videoId } }))
     .then(() => res.status(200).json({ message: 'deleted' }))
-    .catch(err => errorResponseMaster({ response: res, errCode: 500, error: err }))
-}
+    .catch((err) => errorResponseMaster({ response: res, errCode: 500, error: err }));
+};

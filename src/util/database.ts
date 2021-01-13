@@ -1,4 +1,4 @@
-import {Sequelize} from 'sequelize';
+import { Sequelize } from 'sequelize';
 
 const sequelize = new Sequelize(
   'video',
@@ -6,8 +6,8 @@ const sequelize = new Sequelize(
   '1qaz2wsx3edc',
   {
     dialect: 'mysql',
-    host: 'localhost'
-  }
-)
+    host: 'localhost',
+  },
+);
 
 export default sequelize;
