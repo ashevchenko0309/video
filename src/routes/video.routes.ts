@@ -1,9 +1,11 @@
 import { Router } from 'express';
-import { getVideos, getVideo, deleteVideo, postVideo } from '../controllers/video.controller';
+import {
+  getVideos, getVideo, deleteVideo, postVideo,
+} from '../controllers/video.controller';
 
-import videoValidation from './../validations/video.validation';
+import videoValidation from '../validations/video.validation';
 
-import uploadFile from './../util/multer';
+import uploadFile from '../util/multer';
 
 const router = Router();
 

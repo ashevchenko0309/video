@@ -1,4 +1,4 @@
-import {DataTypes} from 'sequelize';
+import { DataTypes } from 'sequelize';
 import VideoInterface from '../types/video.types';
 
 import sequelize from '../util/database';
@@ -12,7 +12,7 @@ const Video = sequelize.define<VideoInterface>('video', {
   },
   title: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: false,
   },
   description: {
     type: DataTypes.STRING,
@@ -20,12 +20,12 @@ const Video = sequelize.define<VideoInterface>('video', {
   },
   videoFilename: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: false,
   },
   thumbFilename: {
     type: DataTypes.STRING,
-    allowNull: false
-  }
-})
+    allowNull: false,
+  },
+});
 
 export default Video;

@@ -7,44 +7,44 @@ export const THUMB_PATH = path.join('./uploads', 'thumbs');
 
 function getFilename(file: Express.Multer.File) {
   const type = file.mimetype.split('/')[1];
-  return `${uuidv4()}.${type}`
+  return `${uuidv4()}.${type}`;
 }
 
 function fileMaster(type: 'destination' | 'filename', file: Express.Multer.File | null, callback: Function) {
-
-  if(file === null){
+  if (file === null) {
     return callback(null, '');
   }
 
   if (file.fieldname === 'video') {
     if (type === 'destination') {
-      callback(null, VIDEO_PATH);
-    } else {
-      const filename = getFilename(file);
-      callback(null, filename);
+      return callback(null, VIDEO_PATH);
     }
-  } else if (file.fieldname === 'thumb') {
-    if (type === 'destination') {
-      callback(null, THUMB_PATH);
-    } else {
-      const filename = getFilename(file);
-      callback(null, filename);
-    }
-  } else {
-    callback(new Error('no file'), '');
+
+    const filename = getFilename(file);
+    return callback(null, filename);
   }
+
+  if (file.fieldname === 'thumb') {
+    if (type === 'destination') {
+      return callback(null, THUMB_PATH);
+    }
+
+    const filename = getFilename(file);
+    return callback(null, filename);
+  }
+
+  return callback(new Error('no file'), '');
 }
 
 const storage = multer.diskStorage({
-  destination: function (req, file, callback) {
+  destination(req, file, callback) {
     fileMaster('destination', file, callback);
   },
-  filename: function (req, file, callback) {
+  filename(req, file, callback) {
     fileMaster('filename', file, callback);
-  }
+  },
 });
 
-const uploadFile = multer({ storage: storage }).fields([{ name: 'video', maxCount: 1 }, { name: 'thumb', maxCount: 1 }]);
+const uploadFile = multer({ storage }).fields([{ name: 'video', maxCount: 1 }, { name: 'thumb', maxCount: 1 }]);
 
-export default uploadFile
-
+export default uploadFile;

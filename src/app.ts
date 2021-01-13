@@ -28,12 +28,9 @@ app.use('/api', videoRouter);
 sequelize
   .sync()
   .then(() => app.listen(3000))
-  .catch(err => {
+  .catch((err) => {
     console.error(err);
     process.exit(1);
-  })
-
+  });
 
 export default app;
-
-
