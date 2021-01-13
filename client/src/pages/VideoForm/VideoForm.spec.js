@@ -1,6 +1,10 @@
 import React from "react"
+import { createBrowserHistory } from 'history'
+
 import VideoForm from "./VideoForm"
-import { isValidLength } from "./video-from.helpers"
+import isValidLength from "../../utils/validations"
+
+const history = createBrowserHistory()
 
 const DEFAULT_STATE = {
   formError: null,
@@ -21,7 +25,7 @@ const DEFAULT_ELEMENTS_VALUES = {
   },
 }
 
-const setUp = () => mount(<VideoForm />)
+const setUp = () => mount(<VideoForm history={history} />)
 
 describe("VideoForm component", () => {
   let component
@@ -57,10 +61,19 @@ describe("VideoForm component", () => {
       it("should set error on submit empty fields", () => {
         expect(component.find(".form-error__hint").length).toBe(0)
 
-        instance.onSubmit({ preventDefault: () => {} })
+        instance.onSubmit({
+          preventDefault: () => { }, currentTarget: {
+            elements: {
+              title: { value: "" },
+              description: { value: "" },
+              video: { files: [{ value: "File" }] },
+              thumb: { value: "" }
+            }
+          }
+        })
 
         expect(component.state().formError).toBe(
-          "Some form field(s) is invalid or empty"
+          "Form have invalid value(s)"
         )
       })
 
@@ -68,7 +81,7 @@ describe("VideoForm component", () => {
         component.setState({ ...DEFAULT_STATE })
 
         instance.onSubmit({
-          preventDefault: () => {},
+          preventDefault: () => { },
           currentTarget: {
             elements: {
               ...DEFAULT_ELEMENTS_VALUES.elements,
@@ -95,8 +108,8 @@ describe("VideoForm component", () => {
           errors: [{ param: "title", msg: "invalid title" }],
         })
         expect(
-          isValidLength("123", { minLength: 5, maxLength: 10 }, "Error")
-        ).toStrictEqual({ hasError: true, errorMessage: "Error" })
+          isValidLength("123", 5, 10)
+        ).toStrictEqual({ hasError: true, errorMessage: "Value less than allowed length" })
       })
 
       it("should return error validation on grater than maxLength", () => {
@@ -104,8 +117,8 @@ describe("VideoForm component", () => {
           errors: [{ param: "title", msg: "invalid title" }],
         })
         expect(
-          isValidLength("12345678910", { minLength: 5, maxLength: 10 }, "Error")
-        ).toStrictEqual({ hasError: true, errorMessage: "Error" })
+          isValidLength("12345678910", 5, 10)
+        ).toStrictEqual({ hasError: true, errorMessage: "Value greater than allowed length" })
       })
     })
 
@@ -114,7 +127,7 @@ describe("VideoForm component", () => {
         component.setState({ ...DEFAULT_STATE, formError: "Some string" })
 
         instance.onSubmit({
-          preventDefault: () => {},
+          preventDefault: () => { },
           currentTarget: {
             elements: {
               title: { value: "Hello" },

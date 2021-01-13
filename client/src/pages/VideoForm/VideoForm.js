@@ -173,8 +173,8 @@ class VideoFrom extends React.Component {
       <Container>
         <Row>
           <Column>
-            <h2>Create new video</h2>
             <form className="upload-video__form" onSubmit={this.onSubmit}>
+              <h2>Create new video</h2>
               <InputField
                 {...FORM_SCHEMA.title}
                 errorMessage={title.errorMessage}
