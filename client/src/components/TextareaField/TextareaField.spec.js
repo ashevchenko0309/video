@@ -45,7 +45,7 @@ describe("TextareaField component", () => {
   })
 
   it("should have default length hint", () => {
-    expect(component.find(".input_field--hint").text()).toBe("0 / 120")
+    expect(component.find(".input_field--hint").text()).toBe("0 / 255")
   })
 
   it("should have required hint", () => {
