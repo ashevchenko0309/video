@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize';
-import VideoInterface from '../types/video.types';
+import VideoInterface from '../../types/video.types';
 
-import sequelize from '../util/database';
+import sequelize from './database';
 
 const Video = sequelize.define<VideoInterface>('video', {
   id: {
