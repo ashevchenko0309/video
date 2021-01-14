@@ -14,12 +14,14 @@ export function find(videoId: number): Promise<VideoInterface | null> {
     .findByPk(videoId)
 }
 
-export function findAll(options: PaginationOptions): Promise<[number, VideoInterface[]]> {
-  return Promise
-    .all([
-      Video.count(),
-      Video.findAll({ ...options }),
-    ])
+export function findAll(options: PaginationOptions): Promise<{ rows: VideoInterface[], count: number }> {
+  return Video
+    .findAndCountAll({ ...options })
+}
+
+export function findAllByCategoryId(id: number, options: PaginationOptions): Promise<{ rows: VideoInterface[], count: number }> {
+  return Video
+    .findAndCountAll({ where: { id }, ...options })
 }
 
 export function deleteVideo(videoId: number): Promise<any> {

@@ -16,7 +16,7 @@ export function findByName(where: any): Promise<CategoryInterface | null> {
   .findOne({ where })
 }
 
-export function findAll(categoryId: number): Promise<CategoryInterface[]> {
+export function findAll(): Promise<CategoryInterface[]> {
   return Category
     .findAll()
 }

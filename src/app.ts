@@ -27,7 +27,7 @@ app.use('/thumbs', express.static(path.join(__dirname, '..', 'uploads', 'thumbs'
 app.use('/api', videoRouter)
 
 sequelize
-  .sync({ force: true })
+  .sync() //{ force: true }
   .then(() => CategoryDao.findById(1))
   .then((category) => {
     if (!category) {
