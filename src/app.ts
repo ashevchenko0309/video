@@ -26,7 +26,7 @@ app.use('/thumbs', express.static(path.join(__dirname, '..', 'uploads', 'thumbs'
 app.use('/api', videoRouter);
 
 sequelize
-  .sync()
+  .sync({ force: true })
   .then(() => app.listen(3000))
   .catch((err) => {
     console.error(err);

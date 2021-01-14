@@ -7,6 +7,7 @@ function Cards({ initVideos = [], totalVideos = 0 }) {
   const [videos, setVideos] = useState([...initVideos])
 
   const fetchMoreItems = async (startIndex, stopIndex) => {
+    // TODO: read category prop for fetch in category
     const nextItems = await fetch(
       `${process.env.REACT_APP_API_HOST}/video?start=${startIndex}&end=${
         stopIndex + 1
@@ -42,6 +43,7 @@ Cards.propTypes = {
 Cards.defaultProps = {
   initVideos: [],
   totalVideos: 0,
+  // TODO: add def prop for category
 }
 
 export default React.memo(Cards)
