@@ -1,0 +1,7 @@
+.category-tag{
+  padding: 8px 12px;
+  background-color: var(--tag-default-background);
+  &.selected{
+    background-color: var(--tag-selected-background);
+  }
+}
