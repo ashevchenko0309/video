@@ -8,8 +8,6 @@ function CategoryFilter({ selectedCategory, setCategory }) {
   const [categories, setCategories] = useState([])
 
   const fetchCategories = () => {
-    console.log("fetch categories")
-    // TODO: create category fetcher
     fetch(`${process.env.REACT_APP_API_HOST}/categories`)
       .then((response) => response.json())
       .then((jsonCategories) => setCategories([...jsonCategories.categories]))

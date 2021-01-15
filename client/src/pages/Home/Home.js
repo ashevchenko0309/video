@@ -34,7 +34,6 @@ function Home() {
 
   return (
     <Container className="page">
-      {/* TODO: add row with categories */}
       <Row>
         <Column>
           <div className="mb-2">

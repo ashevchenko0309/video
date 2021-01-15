@@ -6,7 +6,7 @@ interface Video extends Model {
   description: string,
   videoFilename: string,
   thumbFilename: string,
-  categoryId?: number,
+  categoryId: number,
   categoryName?: string,
   createdAt: string,
   updatedAt: string,
