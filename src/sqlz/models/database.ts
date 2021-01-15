@@ -1,13 +1,15 @@
-import { Sequelize } from 'sequelize';
+import { Sequelize } from 'sequelize'
+import config from './../config/config'
 
 const sequelize = new Sequelize(
-  'video',
-  'root',
-  '1qaz2wsx3edc',
+  config.dbName,
+  config.dbUsername,
+  config.dbPassword,
   {
-    dialect: 'mysql',
-    host: 'localhost',
+    // @ts-ignore
+    dialect: config.dbDialect, 
+    host: config.dbHost,
   },
 );
 
-export default sequelize;
+export default sequelize
