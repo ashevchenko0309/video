@@ -38,7 +38,7 @@ export const getVideo = async (req: Request, res: Response) => {
     const n_videoId = +videoId
 
     if (n_videoId === 0) {
-      return res.status(404)
+      return res.status(404).json(ResponseErrors.NOT_FOUND)
     }
 
     const video = await VideoDao.find(n_videoId)
