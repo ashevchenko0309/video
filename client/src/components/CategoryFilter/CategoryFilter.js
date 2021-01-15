@@ -4,7 +4,7 @@ import Scrollbars from "react-scrollbars-custom"
 
 import Tag from "../Tag/Tag"
 
-function CategoryFilter({ selectedCategory, setCategory }) {
+function CategoryFilter({ selectedCategory }) {
   const [categories, setCategories] = useState([])
 
   const fetchCategories = () => {
@@ -25,7 +25,6 @@ function CategoryFilter({ selectedCategory, setCategory }) {
           categoryId={0}
           isSelected={selectedCategory === 0}
           categoryName="All categories"
-          selectCategory={setCategory}
         />
         {categories.map((category) => (
           <Tag
@@ -33,7 +32,6 @@ function CategoryFilter({ selectedCategory, setCategory }) {
             categoryId={category.id}
             isSelected={category.id === selectedCategory}
             categoryName={category.name}
-            selectCategory={setCategory}
           />
         ))}
       </div>
@@ -42,7 +40,6 @@ function CategoryFilter({ selectedCategory, setCategory }) {
 }
 
 CategoryFilter.propTypes = {
-  setCategory: PropTypes.func.isRequired,
   selectedCategory: PropTypes.number,
 }
 

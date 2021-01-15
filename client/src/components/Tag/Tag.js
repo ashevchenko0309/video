@@ -1,15 +1,21 @@
 import React from "react"
 import PropTypes from "prop-types"
 import classNames from "classnames"
+import { useHistory } from "react-router-dom"
 
-function Tag({ categoryId, isSelected, categoryName, selectCategory }) {
+function Tag({ categoryId, isSelected, categoryName, isSmall }) {
+  const history = useHistory()
   const className = classNames({
-    "category-tag": true,
+    small: isSmall,
     selected: isSelected,
+    "category-tag": true,
   })
 
   const onCategorySelected = () => {
-    selectCategory(categoryId)
+    if (categoryId) {
+      return history.push(`?category=${categoryId}`)
+    }
+    return history.push("/")
   }
 
   return (
@@ -28,13 +34,13 @@ function Tag({ categoryId, isSelected, categoryName, selectCategory }) {
 Tag.propTypes = {
   categoryId: PropTypes.number.isRequired,
   categoryName: PropTypes.string.isRequired,
-  selectCategory: PropTypes.func,
   isSelected: PropTypes.bool,
+  isSmall: PropTypes.bool,
 }
 
 Tag.defaultProps = {
   isSelected: false,
-  selectCategory: () => {},
+  isSmall: false,
 }
 
 export default Tag
