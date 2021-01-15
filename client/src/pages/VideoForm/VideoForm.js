@@ -101,7 +101,7 @@ class VideoFrom extends React.Component {
   }
 
   onPostData = (formData) => {
-    fetch(`${process.env.REACT_APP_API_HOST}/video`, {
+    fetch(`${process.env.REACT_APP_API_HOST}/videos`, {
       method: "POST",
       body: formData,
     })

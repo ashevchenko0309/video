@@ -6,7 +6,7 @@ import cors from 'cors'
 import sequelize from './sqlz/models/database'
 import { CategoryDao } from './dao'
 
-import videoRouter from './routes/video.routes'
+import apiRoutes from './routes/api.routes'
 
 const CLIENT_FOLDER = path.join(__dirname, '..', 'client', 'build')
 const CACHE_TIME = 86400000 * 30
@@ -24,7 +24,7 @@ app.use(express.static(CLIENT_FOLDER))
 app.use('/videos', express.static(path.join(__dirname, '..', 'uploads', 'videos'), { maxAge: CACHE_TIME }))
 app.use('/thumbs', express.static(path.join(__dirname, '..', 'uploads', 'thumbs'), { maxAge: CACHE_TIME }))
 
-app.use('/api', videoRouter)
+app.use('/api', apiRoutes)
 
 sequelize
   .sync() //{ force: true }

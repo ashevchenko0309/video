@@ -1,6 +1,10 @@
 .category-tag{
   padding: 8px 12px;
+  margin-right: 8px;
+  border-radius: 4px;
   background-color: var(--tag-default-background);
+  outline: none;
+  cursor: pointer;
   &.selected{
     background-color: var(--tag-selected-background);
   }

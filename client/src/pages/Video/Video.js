@@ -25,7 +25,7 @@ function Video(props) {
 
     if (!acceptDelete) return null
 
-    return fetch(`${process.env.REACT_APP_API_HOST}/video/${id}`, {
+    return fetch(`${process.env.REACT_APP_API_HOST}/videos/${id}`, {
       method: "DELETE",
     })
       .then(() => history.replace("/"))
@@ -33,7 +33,7 @@ function Video(props) {
   }
 
   const fetchVideo = () =>
-    fetch(`${process.env.REACT_APP_API_HOST}/video/${id}`)
+    fetch(`${process.env.REACT_APP_API_HOST}/videos/${id}`)
       .then((response) => response.json())
       .then(({ video: { title, description, videoFilename } }) => {
         setIsLoading(false)
@@ -60,26 +60,28 @@ function Video(props) {
     <Container className="page">
       <Row>
         <Column>
-          <video
-            src={`${process.env.REACT_APP_VIDEO_HOST}/${video.videoFilename}`}
-            controls
-            autoPlay
-          >
-            <track default kind="captions" srcLang="en" />
-          </video>
-          <div className="d-flex justify-content-between align-items-center">
-            <div>
-              <h3>{video.title}</h3>
-              <p>{video.description}</p>
-            </div>
-            <div>
-              <button
-                type="button"
-                className="button danger-button"
-                onClick={deleteVideo}
-              >
-                Delete
-              </button>
+          <div>
+            <video
+              src={`${process.env.REACT_APP_VIDEO_HOST}/${video.videoFilename}`}
+              controls
+              autoPlay
+            >
+              <track default kind="captions" srcLang="en" />
+            </video>
+            <div className="d-flex justify-content-between align-items-center">
+              <div>
+                <h3>{video.title}</h3>
+                <p>{video.description}</p>
+              </div>
+              <div>
+                <button
+                  type="button"
+                  className="button danger-button"
+                  onClick={deleteVideo}
+                >
+                  Delete
+                </button>
+              </div>
             </div>
           </div>
         </Column>

@@ -10,16 +10,22 @@ import ResponseErrors from '../constants/default-response-messages'
 
 export const getVideos = async (req: Request, res: Response) => {
   try {
-    const { start = '0', end = '0' } = req.query as VideoRequestQuery;
+    const { start = '0', end = '0', category = '0' } = req.query as VideoRequestQuery;
     const pagiOption: PaginationOptionsResult = getPaginationOptions(start, end);
 
     if (!pagiOption) {
       return res.status(422).json(ResponseErrors.INVALID_PAGINATION)
     }
 
-    const { rows, count } = await VideoDao.findAll(pagiOption)
+    if (category === '0') {
+      const { rows, count } = await VideoDao.findAll(pagiOption)
 
-    res.status(200).json({ rows, count })
+      return res.status(200).json({ rows, count })
+    }
+
+    const { rows, count } = await VideoDao.findAllByCategoryId(+category, pagiOption)
+
+    return res.status(200).json({ rows, count })
   } catch (error) {
     console.error(error)
     res.status(500).json(ResponseErrors.SERVER_ERROR)

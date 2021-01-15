@@ -21,7 +21,7 @@ export function findAll(options: PaginationOptions): Promise<{ rows: VideoInterf
 
 export function findAllByCategoryId(id: number, options: PaginationOptions): Promise<{ rows: VideoInterface[], count: number }> {
   return Video
-    .findAndCountAll({ where: { id }, ...options })
+    .findAndCountAll({ where: { categoryId: id }, ...options })
 }
 
 export function deleteVideo(videoId: number): Promise<any> {
