@@ -1,14 +1,12 @@
 import { Request, Response } from 'express';
 
 import { CategoryDao, VideoDao } from "../dao/index"
-
 import { VideoRequestParam, VideoRequestQuery, VideoRequest } from '../types/video.types'
 import { PaginationOptionsResult } from '../types/pagination.types'
-
 import getPaginationOptions from '../util/pagination'
-import { requestValidationHandler } from '../validations/video.validation'
-import ResponseErrors from '../constants/default-response-messages'
 import deleteVideoFiles from '../util/delete-video-files'
+import { hasRequestError, hasRequestFilesError } from '../validations/video.validation'
+import ResponseErrors from '../constants/default-response-messages'
 
 export const getVideos = async (req: Request, res: Response) => {
   try {
@@ -37,7 +35,7 @@ export const getVideo = async (req: Request, res: Response) => {
       return res.status(404)
     }
 
-    const video = VideoDao.find(n_videoId)
+    const video = await VideoDao.find(n_videoId)
 
     if (!video) {
       return res.status(404).json(ResponseErrors.NOT_FOUND)
@@ -52,12 +50,23 @@ export const getVideo = async (req: Request, res: Response) => {
 
 export const postVideo = async (req: Request, res: Response) => {
   try {
-    const files = await requestValidationHandler(req);
+    let validationErrors = []
+    let requestFiles = []
 
-    // TODO: check validation
+    validationErrors = await hasRequestError(req)
+
+    if (validationErrors.length > 0) {
+      return res.status(422).json({ message: validationErrors })
+    }
+
+    requestFiles = await hasRequestFilesError(req)
+
+    if (requestFiles.length === 0) {
+      return res.status(422).json({ message: "No video file or thumb file exists" })
+    }
 
     const { title, description, categoryName, categoryId } = req.body as VideoRequest
-    const [videoFilename, thumbFilename] = files
+    const [videoFilename, thumbFilename] = requestFiles
 
     if (categoryId) {
       const video = await VideoDao.create({
@@ -76,8 +85,7 @@ export const postVideo = async (req: Request, res: Response) => {
       return res.status(201).json({ video })
     }
 
-    // TODO: create normal handler
-    return res.status(422).json({ message: "Validation..." })
+    return res.status(422).json({ message: "categoryId or categoryName must be exist..." })
   } catch (error) {
     console.error(error);
     res.status(500).json(ResponseErrors.SERVER_ERROR)
@@ -98,6 +106,11 @@ export const deleteVideo = async (req: Request, res: Response) => {
     if (video === null) {
       return res.status(404).json(ResponseErrors.NOT_FOUND)
     }
+
+    await deleteVideoFiles({
+      video: [{ filename: video.videoFilename }],
+      thumb: [{ filename: video.thumbFilename }]
+    })
 
     // TODO: delete files
 

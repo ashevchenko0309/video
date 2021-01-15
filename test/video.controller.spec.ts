@@ -4,19 +4,26 @@ import app from "./../src/app";
 describe("Video controller", () => {
 
   beforeAll((done) => {
-      request(app)
-        .post("/api/video")
-        .field('title', 'my awesome video')
-        .field('description', 'my awesome description for video')
-        .attach('video', 'test/attaches/video.mp4')
-        .attach('thumb', 'test/attaches/image.jpg')
-        .expect(201, done);
+    request(app)
+      .post("/api/video")
+      .field('title', 'my awesome video')
+      .field('description', 'my awesome description for video')
+      .field('categoryId', '1')
+      .attach('video', 'test/attaches/video.mp4')
+      .attach('thumb', 'test/attaches/image.jpg')
+      .expect(201, done);
   })
 
-  it("GET /api/video should return 422", (done) => {
+  afterAll((done) => {
     request(app)
-      .get("/api/video")
-      .expect(422, done);
+      .delete("/api/video/1")
+      .expect(200, done);
+  })
+
+  it("GET /api/video/99 should return 404", (done) => {
+    request(app)
+      .get("/api/video/99")
+      .expect(404, done);
   });
 
   it("GET /api/video with pagi should return 200", (done) => {
@@ -42,6 +49,7 @@ describe("Video controller", () => {
       .post("/api/video")
       .field('title', 'my awesome video')
       .field('description', 'my awesome description for video')
+      .field('categoryId', '1')
       .attach('video', 'test/attaches/video.mp4')
       .attach('thumb', 'test/attaches/image.jpg')
       .expect(201, done);
@@ -51,6 +59,7 @@ describe("Video controller", () => {
     request(app)
       .post("/api/video")
       .field('description', 'my awesome description for video')
+      .field('categoryId', '1')
       .attach('video', 'test/attaches/video.mp4')
       .attach('thumb', 'test/attaches/image.jpg')
       .expect(422, done);
@@ -60,6 +69,7 @@ describe("Video controller", () => {
     request(app)
       .post("/api/video")
       .field('title', 'my awesome video')
+      .field('categoryId', '1')
       .attach('video', 'test/attaches/video.mp4')
       .attach('thumb', 'test/attaches/image.jpg')
       .expect(422, done);
@@ -70,6 +80,7 @@ describe("Video controller", () => {
       .post("/api/video")
       .field('title', 'my awesome video')
       .field('description', 'my awesome description for video')
+      .field('categoryId', '1')
       .attach('thumb', 'test/attaches/image.jpg')
       .expect(422, done);
   });
@@ -79,14 +90,64 @@ describe("Video controller", () => {
       .post("/api/video")
       .field('title', 'my awesome video')
       .field('description', 'my awesome description for video')
+      .field('categoryId', '1')
       .attach('video', 'test/attaches/video.mp4')
       .expect(422, done);
   });
 
-  it("DELETE /api/video/1 should return 200", (done) => {
+  // TODO: create tests for category fields
+  it("POST /api/video without categories fields should return 422", (done) => {
     request(app)
-      .delete("/api/video/1")
-      .expect(200, done);
+      .post("/api/video")
+      .field('title', 'my awesome video')
+      .field('description', 'my awesome description for video')
+      .attach('video', 'test/attaches/video.mp4')
+      .attach('thumb', 'test/attaches/image.jpg')
+      .expect(422, done);
+  });
+
+  it("POST /api/video with string instead number categoryId field should return 422", (done) => {
+    request(app)
+      .post("/api/video")
+      .field('title', 'my awesome video')
+      .field('description', 'my awesome description for video')
+      .field('categoryId', 'qwerty')
+      .attach('video', 'test/attaches/video.mp4')
+      .attach('thumb', 'test/attaches/image.jpg')
+      .expect(422, done);
+  });
+
+  it("POST /api/video with invalid categoryName field should return 422", (done) => {
+    request(app)
+      .post("/api/video")
+      .field('title', 'my awesome video')
+      .field('description', 'my awesome description for video')
+      .field('categoryName', 'qwer')
+      .attach('video', 'test/attaches/video.mp4')
+      .attach('thumb', 'test/attaches/image.jpg')
+      .expect(422, done);
+  });
+
+  it("POST /api/video with valid categoryId field should return 201", (done) => {
+    request(app)
+      .post("/api/video")
+      .field('title', 'my awesome video')
+      .field('description', 'my awesome description for video')
+      .field('categoryId', '1')
+      .attach('video', 'test/attaches/video.mp4')
+      .attach('thumb', 'test/attaches/image.jpg')
+      .expect(201, done);
+  });
+
+  it("POST /api/video with valid categoryName field should return 201", (done) => {
+    request(app)
+      .post("/api/video")
+      .field('title', 'my awesome video')
+      .field('description', 'my awesome description for video')
+      .field('categoryName', 'some new category')
+      .attach('video', 'test/attaches/video.mp4')
+      .attach('thumb', 'test/attaches/image.jpg')
+      .expect(201, done);
   });
 
   it("DELETE /api/video/2 should return 200", (done) => {
@@ -96,9 +157,3 @@ describe("Video controller", () => {
   });
 
 });
-
-// describe("GET /api", () => {
-//     it("should return 200 OK", () => {
-//         return request(app).get("video/1").expect(200);
-//     });
-// });
