@@ -6,7 +6,7 @@ function Container({ children, className = "" }) {
 }
 
 Container.propTypes = {
-  children: PropTypes.element.isRequired,
+  children: PropTypes.shape([PropTypes.element]).isRequired,
   className: PropTypes.string,
 }
 

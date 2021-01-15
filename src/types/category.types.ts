@@ -7,6 +7,10 @@ interface Category extends Model {
   updatedAt: string,
 }
 
+type CategoryRequestParam = { categoryId: string };
+
 type CategoryDBResponse = Category | null;
+
+export { CategoryRequestParam, CategoryDBResponse };
 
 export default Category;

@@ -1,8 +1,8 @@
 import { DataTypes } from 'sequelize';
-import Video from "../models/video.model";
-import CategoryInterface from '../types/category.types';
+import Video from "./video.model";
+import CategoryInterface from '../../types/category.types';
 
-import sequelize from '../util/database';
+import sequelize from './database';
 
 const Category = sequelize.define<CategoryInterface>('category', {
   id: {

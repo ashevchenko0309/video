@@ -8,6 +8,7 @@ import Row from "../../components/Grid/Row"
 import Column from "../../components/Grid/Column"
 import InputField from "../../components/InputField/InputField"
 import TextareaField from "../../components/TextareaField/TextareaField"
+import CategorySelect from "../../components/CategorySelect/CategorySelect"
 import VideoUploader from "../../components/VideoUploader/VideoUploader"
 import FormErrorHint from "../../components/FormErrorHints/FormErrorHint"
 
@@ -25,6 +26,10 @@ class VideoFrom extends React.Component {
         errorMessage: "",
       },
       description: {
+        hasError: null,
+        errorMessage: "",
+      },
+      category: {
         hasError: null,
         errorMessage: "",
       },
@@ -78,6 +83,7 @@ class VideoFrom extends React.Component {
 
     const videoTitle = elements.title.value
     const videoDescription = elements.description.value
+    const videoCategory = elements.category.value
     const thumbUrlData = elements.thumb.value
     const videoFile = elements.video.files[0]
 
@@ -97,11 +103,18 @@ class VideoFrom extends React.Component {
     formData.append("description", videoDescription)
     formData.append("video", videoFile)
     formData.append("thumb", dataURLtoFile(thumbUrlData, "thumb"))
+
+    if (+videoCategory) {
+      formData.append("categoryId", +videoCategory)
+    } else {
+      formData.append("categoryName", videoCategory)
+    }
+
     this.onPostData(formData)
   }
 
   onPostData = (formData) => {
-    fetch(`${process.env.REACT_APP_API_HOST}/video`, {
+    fetch(`${process.env.REACT_APP_API_HOST}/videos`, {
       method: "POST",
       body: formData,
     })
@@ -124,7 +137,7 @@ class VideoFrom extends React.Component {
     return history.replace(`/video/${data.video.id}`, { ...data.video })
   }
 
-  onFieldBlur = (value, fieldName) => {
+  validateField = (value, fieldName) => {
     const fieldSettings = FORM_SCHEMA[fieldName]
 
     if (!fieldSettings) return null
@@ -132,18 +145,23 @@ class VideoFrom extends React.Component {
     if (fieldSettings.isRequired) {
       const validationResult = isValidLength(
         value,
-        fieldSettings.options,
+        fieldSettings.options.minLength,
+        fieldSettings.options.maxLength,
         `Field value must be between ${fieldSettings.options.minLength} to ${fieldSettings.options.maxLength}`
       )
 
       switch (fieldName) {
         case "title": {
           this.setState({ title: { ...validationResult } })
-          break
+          return validationResult.hasError
         }
         case "description": {
           this.setState({ description: { ...validationResult } })
-          break
+          return validationResult.hasError
+        }
+        case "category": {
+          this.setState({ category: { ...validationResult } })
+          return validationResult.hasError
         }
         default: {
           return null
@@ -154,6 +172,10 @@ class VideoFrom extends React.Component {
     return null
   }
 
+  onFieldBlur = (value, fieldName) => {
+    this.validateField(value, fieldName)
+  }
+
   onTitleChange = () => {
     this.setState({ title: { hasError: false, errorMessage: "" } })
   }
@@ -162,12 +184,18 @@ class VideoFrom extends React.Component {
     this.setState({ description: { hasError: false, errorMessage: "" } })
   }
 
+  onCategoryChange = (value, fieldName) => {
+    if (!this.validateField(value, fieldName)) {
+      this.setState({ category: { hasError: false, errorMessage: "" } })
+    }
+  }
+
   onVideoChange = () => {
     this.setState({ video: { hasError: false, errorMessage: "" } })
   }
 
   render() {
-    const { title, description, video, formError } = this.state
+    const { title, description, category, video, formError } = this.state
 
     return (
       <Container>
@@ -188,6 +216,12 @@ class VideoFrom extends React.Component {
                 hasError={description.hasError}
                 onChange={this.onDescriptionChange}
                 onBlur={this.onFieldBlur}
+              />
+              <CategorySelect
+                {...FORM_SCHEMA.category}
+                errorMessage={category.errorMessage}
+                hasError={category.hasError}
+                onChange={this.onCategoryChange}
               />
               <VideoUploader
                 {...FORM_SCHEMA.video}

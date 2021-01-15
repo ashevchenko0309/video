@@ -1,15 +1,17 @@
-import { PaginationOptions } from '../types/pagination.types';
+import { PaginationOptions } from "../types/pagination.types"
 
-const getPaginationOptions = (startFrom: string, toEnd: string): PaginationOptions | Error => {
-  const start = parseFloat(startFrom);
-  const end = parseFloat(toEnd);
+const getPaginationOptions = (startFrom: string, toEnd: string): PaginationOptions | null => {
+  const start = +startFrom
+  const end = +toEnd
+
   if (start < 0 || end < start || (start === 0 && end === 0)) {
-    return new Error('invalid pagi options');
+    return null
   }
+  
   return {
     limit: end - start,
     offset: start,
-  };
-};
+  }
+}
 
-export default getPaginationOptions;
+export default getPaginationOptions

@@ -1,87 +1,130 @@
 import { Request, Response } from 'express';
 
-import errorResponseMaster from '../util/error-responses';
+import { CategoryDao, VideoDao } from "../dao/index"
+import { VideoRequestParam, VideoRequestQuery, VideoRequest } from '../types/video.types'
+import { PaginationOptionsResult } from '../types/pagination.types'
+import getPaginationOptions from '../util/pagination'
+import deleteVideoFiles from '../util/delete-video-files'
+import { hasRequestError, hasRequestFilesError } from '../validations/video.validation'
+import ResponseErrors from '../constants/default-response-messages'
 
-import Video from '../models/video.model';
+export const getVideos = async (req: Request, res: Response) => {
+  try {
+    const { start = '0', end = '0', category = '0' } = req.query as VideoRequestQuery;
+    const pagiOption: PaginationOptionsResult = getPaginationOptions(start, end);
 
-import VideoInterface, { VideoRequestParam, VideoRequestQuery, VideoDBResponse } from '../types/video.types';
-import { PaginationOptionsResult } from '../types/pagination.types';
+    if (!pagiOption) {
+      return res.status(422).json(ResponseErrors.INVALID_PAGINATION)
+    }
 
-import getPaginationOptions from '../util/pagination';
-import { requestValidationHandler } from '../validations/video.validation';
-import deleteVideoFiles from '../util/delete-video-files';
+    if (category === '0') {
+      const { rows, count } = await VideoDao.findAll(pagiOption)
 
-export const getVideos = (req: Request, res: Response) => {
-  const { start = '0', end = '0' } = req.query as VideoRequestQuery;
-  const pagiOption: PaginationOptionsResult = getPaginationOptions(start, end);
+      return res.status(200).json({ rows, count })
+    }
 
-  if (pagiOption instanceof Error) {
-    return errorResponseMaster({ response: res, errCode: 422, error: pagiOption });
+    const { rows, count } = await VideoDao.findAllByCategoryId(+category, pagiOption)
+
+    return res.status(200).json({ rows, count })
+  } catch (error) {
+    console.error(error)
+    res.status(500).json(ResponseErrors.SERVER_ERROR)
   }
-
-  return Promise
-    .all([
-      Video.count(),
-      Video.findAll({ ...pagiOption }),
-    ])
-    .then(([total, videos]) => res.status(200).json({ videos, total }))
-    .catch((err) => errorResponseMaster({ response: res, errCode: 500, error: err }));
 };
 
-export const getVideo = (req: Request, res: Response) => {
-  const { videoId = 0 } = req.params as VideoRequestParam;
+export const getVideo = async (req: Request, res: Response) => {
+  try {
+    const { videoId } = req.params as VideoRequestParam
+    const n_videoId = +videoId
 
-  if (videoId === 0) {
-    return errorResponseMaster({ response: res, errCode: 404 });
+    if (n_videoId === 0) {
+      return res.status(404)
+    }
+
+    const video = await VideoDao.find(n_videoId)
+
+    if (!video) {
+      return res.status(404).json(ResponseErrors.NOT_FOUND)
+    }
+
+    res.status(200).json({ video })
+  } catch (error) {
+    console.error(error)
+    res.status(500)
   }
-
-  return Video.findByPk(videoId)
-    .then((video: VideoDBResponse) => {
-      if (!video) {
-        return errorResponseMaster({ response: res, errCode: 404 });
-      }
-
-      return res.status(200).json({ video });
-    })
-    .catch((err) => errorResponseMaster({ response: res, errCode: 500, error: err }));
 };
 
-export const postVideo = (req: Request, res: Response) => (
-  requestValidationHandler(req)
-    .then((filanames: string[]) => {
-      const { title, description } = req.body as VideoInterface;
+export const postVideo = async (req: Request, res: Response) => {
+  try {
+    let validationErrors = []
+    let requestFiles = []
 
-      const [videoFilename, thumbFilename] = filanames;
+    validationErrors = await hasRequestError(req)
 
-      return Video.create({
-        title, description, videoFilename, thumbFilename,
+    if (validationErrors.length > 0) {
+      return res.status(422).json({ message: validationErrors })
+    }
+
+    requestFiles = await hasRequestFilesError(req)
+
+    if (requestFiles.length === 0) {
+      return res.status(422).json({ message: "No video file or thumb file exists" })
+    }
+
+    const { title, description, categoryName, categoryId } = req.body as VideoRequest
+    const [videoFilename, thumbFilename] = requestFiles
+
+    if (categoryId) {
+      const video = await VideoDao.create({
+        title,
+        description,
+        videoFilename,
+        thumbFilename,
+        categoryId: +categoryId
       })
-        .then((video: VideoInterface) => res.status(201).json({ video }))
-        .catch((err) => errorResponseMaster({ response: res, errCode: 500, error: err }));
-    })
-    .catch((err) => errorResponseMaster({
-      response: res, errCode: err.code, error: null, body: { message: err.msg.toString() },
-    }))
-);
+      return res.status(201).json({ video })
+    }
 
-export const deleteVideo = (req: Request, res: Response) => {
-  const { videoId = 0 } = req.params as VideoRequestParam;
-  if (videoId === 0) {
-    return errorResponseMaster({ response: res, errCode: 404 });
+    if (categoryName) {
+      const category = await CategoryDao.create(categoryName)
+      const video = await VideoDao.create({ title, description, videoFilename, thumbFilename, categoryId: category.id })
+      return res.status(201).json({ video })
+    }
+
+    return res.status(422).json({ message: "categoryId or categoryName must be exist..." })
+  } catch (error) {
+    console.error(error);
+    res.status(500).json(ResponseErrors.SERVER_ERROR)
   }
+}
 
-  return Video.findByPk(videoId)
-    .then((video: VideoDBResponse): any => {
-      if (!video) {
-        return errorResponseMaster({ response: res, errCode: 404 });
-      }
-      const { videoFilename, thumbFilename } = video;
-      return deleteVideoFiles({
-        video: [{ filename: videoFilename }],
-        thumb: [{ filename: thumbFilename }],
-      });
+export const deleteVideo = async (req: Request, res: Response) => {
+  try {
+    const { videoId } = req.params as VideoRequestParam
+    const n_videoId = +videoId
+
+    if (n_videoId === 0) {
+      return res.status(404).json(ResponseErrors.NOT_FOUND)
+    }
+
+    const video = await VideoDao.find(n_videoId)
+
+    if (video === null) {
+      return res.status(404).json(ResponseErrors.NOT_FOUND)
+    }
+
+    await deleteVideoFiles({
+      video: [{ filename: video.videoFilename }],
+      thumb: [{ filename: video.thumbFilename }]
     })
-    .then(() => Video.destroy({ where: { id: videoId } }))
-    .then(() => res.status(200).json({ message: 'deleted' }))
-    .catch((err) => errorResponseMaster({ response: res, errCode: 500, error: err }));
+
+    // TODO: delete files
+
+    await VideoDao.deleteVideo(n_videoId)
+
+    return res.status(200).json(ResponseErrors.SUCCESS)
+  } catch (error) {
+    console.error(error)
+    res.status(500).json(ResponseErrors.SERVER_ERROR)
+  }
 };

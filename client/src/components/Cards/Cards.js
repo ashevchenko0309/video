@@ -2,6 +2,7 @@ import React, { useState } from "react"
 import PropTypes from "prop-types"
 import { Masonry, useInfiniteLoader } from "masonic"
 import Card from "../Card/Card"
+import NoVideoIndicator from "../NoVideoIndicator/NoVideoIndicator"
 
 function Cards({ initVideos = [], totalVideos = 0 }) {
   const [videos, setVideos] = useState([...initVideos])
@@ -13,7 +14,7 @@ function Cards({ initVideos = [], totalVideos = 0 }) {
         stopIndex + 1
       }`
     ).then((response) => response.json())
-    setVideos((current) => [...current, ...nextItems.videos])
+    setVideos((current) => [...current, ...nextItems.rows])
   }
 
   const maybeLoadMore = useInfiniteLoader(fetchMoreItems, {
@@ -22,6 +23,10 @@ function Cards({ initVideos = [], totalVideos = 0 }) {
     threshold: 3,
     totalItems: totalVideos,
   })
+
+  if (videos.length === 0) {
+    return <NoVideoIndicator />
+  }
 
   return (
     <Masonry

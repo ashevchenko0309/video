@@ -8,6 +8,7 @@ const unlink = util.promisify(fs.unlink);
 
 const deleteVideoFiles = (files: any) => {
   const deleteFiles = [];
+
   if (files.video) {
     deleteFiles.push(path.join(VIDEO_PATH, files.video[0].filename));
   }

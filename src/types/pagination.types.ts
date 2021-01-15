@@ -3,4 +3,4 @@ export type PaginationOptions = {
   offset: number
 };
 
-export type PaginationOptionsResult = PaginationOptions | Error;
+export type PaginationOptionsResult = PaginationOptions | null;
