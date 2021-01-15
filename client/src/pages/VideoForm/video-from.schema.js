@@ -19,6 +19,15 @@ const FORM_SCHEMA = {
       maxLength: 255,
     },
   },
+  category: {
+    name: "category",
+    labelText: "Video category",
+    isRequired: true,
+    options: {
+      minLength: 5,
+      maxLength: 120,
+    },
+  },
   video: {
     name: "video",
     isRequired: true,

@@ -1,9 +1,9 @@
 import React from "react"
 import PropTypes from "prop-types"
-import classnames from "classnames"
+import classNames from "classnames"
 
 function Tag({ categoryId, isSelected, categoryName, selectCategory }) {
-  const className = classnames({
+  const className = classNames({
     "category-tag": true,
     selected: isSelected,
   })

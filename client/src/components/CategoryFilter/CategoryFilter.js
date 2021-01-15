@@ -23,6 +23,12 @@ function CategoryFilter({ selectedCategory, setCategory }) {
   return (
     <Scrollbars style={{ width: "100%", height: "32px" }}>
       <div className="d-flex align-items-center">
+        <Tag
+          categoryId={0}
+          isSelected={selectedCategory === 0}
+          categoryName="All categories"
+          selectCategory={setCategory}
+        />
         {categories.map((category) => (
           <Tag
             key={category.name}
