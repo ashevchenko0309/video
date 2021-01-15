@@ -13,7 +13,7 @@ function Tag({ categoryId, isSelected, categoryName, isSmall }) {
 
   const onCategorySelected = () => {
     if (categoryId) {
-      return history.push(`?category=${categoryId}`)
+      return history.push(`/?category=${categoryId}`)
     }
     return history.push("/")
   }
