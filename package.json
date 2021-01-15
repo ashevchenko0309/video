@@ -5,11 +5,18 @@
   "main": "app.js",
   "scripts": {
     "test": "jest --forceExit --coverage --verbose",
-    "watch": "cross-env NODE_ENV=development concurrently \"npm run watch-ts\" \"npm run watch-node\"",
+    "watch": "cross-env NODE_ENV=development concurrently \" rm:dist \" \"npm run watch-ts\" \"npm run watch-node\"",
     "watch-node": "nodemon dist/app.js",
     "watch-ts": "tsc -w",
     "lint": "eslint ./src --ext .ts",
-    "lint:fix": "eslint ./src --ext .ts --fix"
+    "lint:fix": "eslint ./src --ext .ts --fix",
+    "rm:dist": "rimraf ./dist",
+    "db:create:migrate:seed": "tsc && npm run db:create && npm run db:migrate && npm run db:seed",
+    "db:create": "npx sequelize-cli db:create",
+    "db:migrate": "npx sequelize-cli db:migrate",
+    "db:seed": "npx sequelize-cli db:seed:all",
+    "db:migrate:undo": "npx sequelize-cli db:migrate:undo",
+    "db:drop": "npx sequelize-cli db:drop"
   },
   "repository": {
     "type": "git",
@@ -56,6 +63,7 @@
     "jest": "^26.6.3",
     "nodemon": "^2.0.6",
     "prettier": "^2.2.1",
+    "rimraf": "^3.0.2",
     "supertest": "^6.0.1",
     "ts-jest": "^26.4.4",
     "typescript": "^4.1.3"

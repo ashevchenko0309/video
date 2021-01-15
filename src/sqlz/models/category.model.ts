@@ -1,21 +1,10 @@
-import { DataTypes } from 'sequelize';
+import CategoryModelSchema from "../schema/category.model.schema"
 import Video from "./video.model";
-import CategoryInterface from '../../types/category.types';
+import CategoryInterface from "../../types/category.types";
 
-import sequelize from './database';
+import sequelize from '.';
 
-const Category = sequelize.define<CategoryInterface>('category', {
-  id: {
-    type: DataTypes.INTEGER,
-    autoIncrement: true,
-    allowNull: false,
-    primaryKey: true,
-  },
-  name: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-});
+const Category = sequelize.define<CategoryInterface>('category', CategoryModelSchema);
 
 Category.hasMany(Video);
 Video.belongsTo(Category);
