@@ -1,0 +1,19 @@
+{
+  "extends": ["airbnb-typescript/base"],
+  "parserOptions": {
+    "project": "./tsconfig.json"
+  },
+  "plugins": [
+    "prettier"
+  ],
+  "rules": {
+    "semi": 0,
+    "no-plusplus": "off",
+    "prettier/prettier": [
+      "error", {
+        "semi": false,
+        "endOfLine":"auto"
+      }
+    ]
+  }
+}
