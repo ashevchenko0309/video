@@ -1,31 +1,8 @@
-import { DataTypes } from 'sequelize';
+import VideoModelSchema from '../schema/video.model.schema'
 import VideoInterface from '../../types/video.types';
 
-import sequelize from './database';
+import sequelize from '.';
 
-const Video = sequelize.define<VideoInterface>('video', {
-  id: {
-    type: DataTypes.INTEGER,
-    autoIncrement: true,
-    allowNull: false,
-    primaryKey: true,
-  },
-  title: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  description: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  videoFilename: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  thumbFilename: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-});
+const Video = sequelize.define<VideoInterface>('video', VideoModelSchema);
 
 export default Video;

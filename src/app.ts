@@ -3,7 +3,7 @@ import bodyParser from 'body-parser'
 import path from 'path'
 import cors from 'cors'
 
-import sequelize from './sqlz/models/database'
+import sequelize from './sqlz/models'
 import { CategoryDao } from './dao'
 
 import apiRoutes from './routes/api.routes'
