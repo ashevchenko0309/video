@@ -1,5 +1,6 @@
 import request from "supertest";
-import app from "./../src/app";
+import describe from "jest"
+import app from "../src/app";
 
 describe("Video controller", () => {
 
