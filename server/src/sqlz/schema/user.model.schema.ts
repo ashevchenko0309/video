@@ -7,9 +7,18 @@ export default {
     allowNull: false,
     primaryKey: true,
   },
+  nickname: {
+    type: DataTypes.STRING,
+    required: true,
+    unique: true,
+  },
   email: {
     type: DataTypes.STRING,
     required: true,
+    validate: {
+      isEmail: true,
+    },
+    unique: true,
   },
   password: {
     type: DataTypes.STRING,
@@ -18,6 +27,7 @@ export default {
   role: {
     type: DataTypes.ENUM("admin", "user"),
     allowNull: false,
+    defaultValue: "user",
   },
   createdAt: {
     type: DataTypes.DATE,
