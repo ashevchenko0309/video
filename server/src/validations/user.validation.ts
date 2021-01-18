@@ -1,4 +1,4 @@
-import { body } from "express-validator"
+import { body, check } from "express-validator"
 
 export const loginValidation = [
   body("email")
@@ -18,6 +18,6 @@ export const userValidation = [
     .isEmpty()
     .withMessage("Enter nickname")
     .trim()
-    .isLength({ min: 5, max: 120})
+    .isLength({ min: 5, max: 120 })
     .withMessage("Nickname must be greater than 5 and less than 120 chars")
 ]

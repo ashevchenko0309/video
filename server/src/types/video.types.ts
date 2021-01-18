@@ -33,7 +33,7 @@ type VideoDBResponse = Video | null
 
 type VideoRequestParam = { videoId: string }
 
-type VideoRequestQuery = { start: string; end: string; category: string }
+type VideoRequestQuery = { start: string; end: string; category: string, user: string }
 
 export {
   CreateVideoInterface,

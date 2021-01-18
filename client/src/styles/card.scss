@@ -9,7 +9,14 @@
     line-height: var(--text-md);
     margin: 0;
   }
-  .card__content {
+
+  .card__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .card__content, .card__footer {
     .card__link {
       color: var(--primary-color);
       line-height: var(--text-lg);

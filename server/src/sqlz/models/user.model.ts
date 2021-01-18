@@ -5,8 +5,8 @@ import UserInterface from "../../types/user.types"
 import sequelize from "."
 
 const User = sequelize.define<UserInterface>(
-  "user",
-  UserModelSchema
+  "users",
+  UserModelSchema,
 )
 
 User.hasMany(Video)

@@ -1,19 +1,35 @@
 import React, { useState } from "react"
 import PropTypes from "prop-types"
 import { Masonry, useInfiniteLoader } from "masonic"
+import queryString from "query-string"
+
 import Card from "../Card/Card"
 import NoVideoIndicator from "../NoVideoIndicator/NoVideoIndicator"
 
-function Cards({ initVideos = [], totalVideos = 0 }) {
+function Cards({ initVideos, totalVideos, categoryId, userId }) {
   const [videos, setVideos] = useState([...initVideos])
 
   const fetchMoreItems = async (startIndex, stopIndex) => {
-    // TODO: read category prop for fetch in category
-    const nextItems = await fetch(
-      `${process.env.REACT_APP_API_HOST}/video?start=${startIndex}&end=${
-        stopIndex + 1
-      }`
-    ).then((response) => response.json())
+    const query = {
+      start: startIndex,
+      end: stopIndex,
+    }
+
+    if (startIndex === stopIndex) return
+
+    if (categoryId) {
+      query.category = categoryId
+    }
+
+    if (userId) {
+      query.user = userId
+    }
+
+    const apiUrl = `${
+      process.env.REACT_APP_API_HOST
+    }/videos?${queryString.stringify(query)}`
+
+    const nextItems = await fetch(apiUrl).then((response) => response.json())
     setVideos((current) => [...current, ...nextItems.rows])
   }
 
@@ -43,12 +59,15 @@ function Cards({ initVideos = [], totalVideos = 0 }) {
 Cards.propTypes = {
   initVideos: PropTypes.shape([]),
   totalVideos: PropTypes.number,
+  categoryId: PropTypes.number,
+  userId: PropTypes.number,
 }
 
 Cards.defaultProps = {
   initVideos: [],
   totalVideos: 0,
-  // TODO: add def prop for category
+  categoryId: 0,
+  userId: 0,
 }
 
 export default React.memo(Cards)

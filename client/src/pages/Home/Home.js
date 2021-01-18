@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react"
 import { useLocation } from "react-router-dom"
 import queryString from "query-string"
+
 import CategoryFilter from "../../components/CategoryFilter/CategoryFilter"
 import LoadingIndicator from "../../components/LoadingIndicator/LoadingIndicator"
 import Container from "../../components/Grid/Container"
@@ -11,29 +12,54 @@ import Column from "../../components/Grid/Column"
 // TODO: add category filter to url query
 function Home() {
   const { search } = useLocation()
-  const [category, setCategory] = useState(0)
+  const [categoryFilter, setCategoryFilter] = useState(0)
+  const [userFilter, setUserFilter] = useState(0)
   const [totalVideos, setTotalVideos] = useState(0)
   const [initVideos, setInitVideos] = useState([])
   const [isLoading, setIsLoading] = useState(true)
 
   const fetchData = () => {
-    let categoryId = 0
-
-    if (search) {
-      const queryStr = queryString.parse(search)
-      categoryId = queryStr.category
+    const query = {
+      start: 0,
+      end: 10,
     }
 
-    const query = `?start=0&end=10${
-      categoryId ? `&category=${categoryId}` : ""
-    }`
-    const apiUrl = `${process.env.REACT_APP_API_HOST}/videos${query}`
+    if (search) {
+      if (categoryFilter) {
+        query.category = categoryFilter
+      }
 
-    setCategory(+categoryId)
+      if (userFilter) {
+        query.user = userFilter
+      }
+
+      const queryStr = queryString.parse(search)
+      if (queryStr.category) {
+        const { category } = queryStr
+        query.category = category
+        setCategoryFilter(+category)
+      }
+
+      if (queryStr.user) {
+        const { user } = queryStr
+        query.user = user
+        setUserFilter(+user)
+      }
+    } else {
+      console.log("no search")
+      setCategoryFilter(0)
+      setUserFilter(0)
+    }
+
+    const apiUrl = `${
+      process.env.REACT_APP_API_HOST
+    }/videos?${queryString.stringify(query)}`
+
     setIsLoading(true)
     fetch(apiUrl)
       .then((response) => response.json())
       .then((data) => {
+        console.log(data)
         setTotalVideos(data.count)
         setInitVideos([...data.rows])
         setIsLoading(false)
@@ -50,7 +76,7 @@ function Home() {
       <Row>
         <Column>
           <div className="mb-2">
-            <CategoryFilter selectedCategory={category} />
+            <CategoryFilter selectedCategory={categoryFilter} />
           </div>
         </Column>
       </Row>
@@ -59,7 +85,12 @@ function Home() {
           {isLoading ? (
             <LoadingIndicator />
           ) : (
-            <Cards initVideos={initVideos} totalVideos={totalVideos} />
+            <Cards
+              initVideos={initVideos}
+              totalVideos={totalVideos}
+              userId={userFilter}
+              categoryId={categoryFilter}
+            />
           )}
         </Column>
       </Row>

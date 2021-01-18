@@ -1,10 +1,12 @@
 import React from "react"
 import PropTypes from "prop-types"
+import queryString from "query-string"
 import classNames from "classnames"
-import { useHistory } from "react-router-dom"
+import { useHistory, useLocation } from "react-router-dom"
 
 function Tag({ categoryId, isSelected, categoryName, isSmall }) {
   const history = useHistory()
+  const { search } = useLocation()
   const className = classNames({
     small: isSmall,
     selected: isSelected,
@@ -12,8 +14,10 @@ function Tag({ categoryId, isSelected, categoryName, isSmall }) {
   })
 
   const onCategorySelected = () => {
+    const queryObj = queryString.parse(search)
     if (categoryId) {
-      return history.push(`/?category=${categoryId}`)
+      const query = queryString.stringify({ ...queryObj, category: categoryId })
+      return history.push(`/?${query}`)
     }
     return history.push("/")
   }

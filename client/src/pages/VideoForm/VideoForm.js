@@ -1,5 +1,6 @@
 import React from "react"
 import ReactRouterPropTypes from "react-router-prop-types"
+import validator from "validator"
 
 import FORM_SCHEMA from "./video-from.schema"
 
@@ -41,16 +42,17 @@ class VideoFrom extends React.Component {
   }
 
   isFormValid = (title, description, videoFile) => {
-    const titleValidationResult = isValidLength(
-      title,
-      FORM_SCHEMA.title.options.minLength,
-      FORM_SCHEMA.title.options.maxLength
-    )
-    const descriptionValidationResult = isValidLength(
-      description,
-      FORM_SCHEMA.description.options.minLength,
-      FORM_SCHEMA.description.options.maxLength
-    )
+    const titleValidationResult = validator.isLength(title, {
+      min: FORM_SCHEMA.title.options.minLength,
+      max: FORM_SCHEMA.title.options.maxLength,
+    })
+    /* eslint-disable no-debugger */
+    debugger
+    console.log(titleValidationResult)
+    const descriptionValidationResult = validator.isLength(description, {
+      min: FORM_SCHEMA.description.options.minLength,
+      max: FORM_SCHEMA.description.options.maxLength,
+    })
     let isFormValid = true
 
     if (titleValidationResult.hasError) {
@@ -88,8 +90,7 @@ class VideoFrom extends React.Component {
     const videoFile = elements.video.files[0]
 
     if (!this.isFormValid(videoTitle, videoDescription, videoFile)) {
-      this.setState({ formError: "Form have invalid value(s)" })
-      return
+      return this.setState({ formError: "Form have invalid value(s)" })
     }
 
     const { formError } = this.state
@@ -110,7 +111,7 @@ class VideoFrom extends React.Component {
       formData.append("categoryName", videoCategory)
     }
 
-    this.onPostData(formData)
+    return this.onPostData(formData)
   }
 
   onPostData = (formData) => {
@@ -134,7 +135,12 @@ class VideoFrom extends React.Component {
 
     const { history } = this.props
 
-    return history.replace(`/video/${data.video.id}`, { ...data.video })
+    return history.replace(`/video/${data.video.id}`, {
+      ...data.video,
+      category: {
+        ...data.category,
+      },
+    })
   }
 
   validateField = (value, fieldName) => {

@@ -47,8 +47,12 @@ export const postLogin = async (req: Request, res: Response) => {
       return res.status(422).json(validationErrors.array())
     }
 
-    const { password } = req.body
-    const user = req.user
+    const { email, password } = req.body
+    const user = await UserDao.getUserByEmail(email)
+
+    if(!user){
+      return res.status(404).json(ResponseErrors.NOT_FOUND)
+    }
 
     const isMatch = bcrypt.compare(password, user.password)
 
