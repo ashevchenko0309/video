@@ -1,4 +1,5 @@
 export default {
+  UNAUTHORIZED: { message: "Unauthorized" },
   NOT_FOUND: { message: "Not found" },
   SERVER_ERROR: { message: "Server error..." },
   SUCCESS: { message: "Ok" },
