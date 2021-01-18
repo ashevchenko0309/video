@@ -14,6 +14,7 @@ import {
   hasRequestFilesError,
 } from "../validations/video.validation"
 import ResponseErrors from "../constants/default-response-messages"
+import Category from "../sqlz/models/category.model"
 
 export const getVideos = async (req: Request, res: Response) => {
   try {
@@ -96,14 +97,17 @@ export const postVideo = async (req: Request, res: Response) => {
     const [videoFilename, thumbFilename] = requestFiles
 
     if (categoryId) {
+      const category = await CategoryDao.findById(+categoryId)
       const video = await VideoDao.create({
         title,
         description,
         videoFilename,
         thumbFilename,
         categoryId: +categoryId,
+        userId: 1,
       })
-      return res.status(201).json({ video })
+
+      return res.status(201).json({ video, category })
     }
 
     if (categoryName) {
@@ -114,8 +118,9 @@ export const postVideo = async (req: Request, res: Response) => {
         videoFilename,
         thumbFilename,
         categoryId: category.id,
+        userId: 1,
       })
-      return res.status(201).json({ video })
+      return res.status(201).json({ video, category })
     }
 
     return res
