@@ -5,7 +5,7 @@ import CategoryInterface from "../../types/category.types"
 import sequelize from "."
 
 const Category = sequelize.define<CategoryInterface>(
-  "category",
+  "categories",
   CategoryModelSchema
 )
 

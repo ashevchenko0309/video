@@ -23,6 +23,14 @@ export default {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  categoryId: {
+    type: DataTypes.UUID,
+    allowNull: false,
+  },
+  userId: {
+    type: DataTypes.UUID,
+    allowNull: false,
+  },
   createdAt: {
     type: DataTypes.DATE,
     allowNull: false,

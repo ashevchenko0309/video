@@ -5,7 +5,7 @@ import UserInterface from "../../types/user.types"
 import sequelize from "."
 
 const User = sequelize.define<UserInterface>(
-  "user",
+  "users",
   UserModelSchema
 )
 
