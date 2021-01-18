@@ -28,7 +28,7 @@ export const postSingup = async (req: Request, res: Response) => {
       return res.status(422).json({ message: "User already exist with this email" })
     }
 
-    const hashedPassword = await bcrypt.hash(password, 32)
+    const hashedPassword = await bcrypt.hash(password, 12)
 
     await UserDao.createUser({ nickname, email, password: hashedPassword })
 
