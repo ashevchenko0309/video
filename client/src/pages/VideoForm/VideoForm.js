@@ -115,6 +115,9 @@ class VideoFrom extends React.Component {
     fetch(`${process.env.REACT_APP_API_HOST}/videos`, {
       method: "POST",
       body: formData,
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
     })
       .then((response) => response.json())
       .then(this.onFulfilledPost)
@@ -136,6 +139,9 @@ class VideoFrom extends React.Component {
       ...data.video,
       category: {
         ...data.category,
+      },
+      user: {
+        ...data.user,
       },
     })
   }
@@ -188,6 +194,8 @@ class VideoFrom extends React.Component {
   }
 
   onCategoryChange = (value, fieldName) => {
+    if (typeof value === "number") return
+
     if (!this.validateField(value, fieldName)) {
       this.setState({ category: { hasError: false, errorMessage: "" } })
     }

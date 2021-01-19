@@ -151,11 +151,10 @@ class Signup extends React.Component {
   }
 
   onFulfilledPost = (data) => {
-    console.log(data)
-    const { token, expiresIn, role } = data
+    const { token, role } = data
     const [, setRole] = this.context
 
-    localStorage.setItem("token", JSON.stringify({ token, expiresIn }))
+    localStorage.setItem("token", token)
     localStorage.setItem("role", role)
 
     setRole(role)

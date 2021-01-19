@@ -11,20 +11,23 @@ const applyPassportStrategy = (passport: any) => {
   passport.use(
     new Strategy(options, (payload, done) => {
       UserDao.getUserByEmail(payload.email)
-      .then((user) => {
-        if(user){
-          return done(null, {
-            email: user.email,
-            id: user.id
-          })
-        }
+        .then((user) => {
+          if (user) {
+            const { id, email, role, nickname } = user
+            return done(null, {
+              id,
+              email,
+              nickname,
+              role,
+            })
+          }
 
-        return done(null, false)
-      })
-      .catch((error) => {
-        console.error(error)
-        done(error, false)
-      })
+          return done(null, false)
+        })
+        .catch((error) => {
+          console.error(error)
+          done(error, false)
+        })
     })
   );
 };

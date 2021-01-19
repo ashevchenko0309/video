@@ -17,7 +17,7 @@ function Card({
 }) {
   const path = {
     pathname: `/video/${id}`,
-    state: { title, description, videoFilename, category },
+    state: { title, description, videoFilename, category, user },
   }
 
   return (

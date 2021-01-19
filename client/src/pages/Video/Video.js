@@ -6,6 +6,7 @@ import Container from "../../components/Grid/Container"
 import Row from "../../components/Grid/Row"
 import Column from "../../components/Grid/Column"
 import Tag from "../../components/Tag/Tag"
+import UserTag from "../../components/UserTag/UserTag"
 import Button from "../../components/Button/Button"
 
 import LoadingIndicator from "../../components/LoadingIndicator/LoadingIndicator"
@@ -24,6 +25,7 @@ function Video(props) {
     description: "",
     videoFilename: "",
     category: {},
+    user: {},
   })
 
   const deleteVideo = () => {
@@ -43,10 +45,13 @@ function Video(props) {
   const fetchVideo = () =>
     fetch(`${process.env.REACT_APP_API_HOST}/videos/${id}`)
       .then((response) => response.json())
-      .then(({ video: { title, description, videoFilename, category } }) => {
-        setIsLoading(false)
-        setVideo({ title, description, videoFilename, category })
-      })
+      .then(
+        ({ video: { title, description, videoFilename, category, user } }) => {
+          console.log()
+          setIsLoading(false)
+          setVideo({ title, description, videoFilename, category, user })
+        }
+      )
       .catch((err) => console.error(err))
 
   const getVideo = () => {
@@ -56,8 +61,9 @@ function Video(props) {
         description,
         videoFilename,
         category,
+        user,
       } = props.location.state
-      setVideo({ title, description, videoFilename, category })
+      setVideo({ title, description, videoFilename, category, user })
       return setIsLoading(false)
     }
     return fetchVideo()
@@ -91,6 +97,9 @@ function Video(props) {
                     categoryName={video.category.name}
                     isSmall
                   />
+                </div>
+                <div className="mt-1">
+                  <UserTag id={video.user.id} nickname={video.user.nickname} />
                 </div>
               </div>
               <div>

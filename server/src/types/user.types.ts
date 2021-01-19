@@ -1,13 +1,5 @@
 import { Model } from "sequelize"
 
-declare global {
-  namespace Express {
-    interface Request {
-      user?: User
-    }
-  }
-}
-
 interface User extends Model {
   id: number,
   nickname: string,

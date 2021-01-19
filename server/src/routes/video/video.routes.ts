@@ -1,4 +1,5 @@
 import { Router } from "express"
+import passport from "passport"
 import {
   getVideos,
   getVideo,
@@ -15,7 +16,7 @@ const router = Router()
 router.get("/", getVideos)
 router.get("/:videoId", getVideo)
 
-router.post("/", uploadFile, [...videoValidation], postVideo)
+router.post("/", passport.authenticate('jwt', { session: false }), uploadFile, [...videoValidation], postVideo)
 router.delete("/:videoId", deleteVideo)
 
 export default router

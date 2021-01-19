@@ -25,7 +25,7 @@ export function create(video: CreateVideoInterface): Promise<any> {
 }
 
 export function find(videoId: number): Promise<VideoInterface | null> {
-  return Video.findByPk(videoId, { include: Category })
+  return Video.findByPk(videoId, { include: DEFAULT_INCLUDES })
 }
 
 export function findAll(
@@ -38,6 +38,9 @@ export function findAll(
   return Video.findAndCountAll({
     ...options,
     where,
+    order: [
+      ['createdAt', 'DESC'],
+    ],
     include: DEFAULT_INCLUDES,
   })
 }
@@ -52,6 +55,9 @@ export function findAllByCategoryId(
   return Video.findAndCountAll({
     where: { categoryId: id },
     ...options,
+    order: [
+      ['createdAt', 'DESC'],
+    ],
     include: DEFAULT_INCLUDES,
   })
 }
@@ -66,6 +72,9 @@ export function findAllByUserId(
   return Video.findAndCountAll({
     where: { userId: id },
     ...options,
+    order: [
+      ['createdAt', 'DESC'],
+    ],
     include: DEFAULT_INCLUDES,
   })
 }

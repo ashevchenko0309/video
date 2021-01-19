@@ -73,6 +73,11 @@ export const postVideo = async (req: Request, res: Response) => {
   try {
     let validationErrors = []
     let requestFiles = []
+    const user: any = req.user // TODO: fix this typo
+
+    if (!user || !user.id) {
+      return res.status(401).json(ResponseErrors.UNAUTHORIZED)
+    }
 
     validationErrors = await hasRequestError(req)
 
@@ -97,15 +102,16 @@ export const postVideo = async (req: Request, res: Response) => {
     const [videoFilename, thumbFilename] = requestFiles
 
     if (categoryId) {
+      const category = await CategoryDao.findById(+categoryId)
       const video = await VideoDao.create({
         title,
         description,
         videoFilename,
         thumbFilename,
         categoryId: +categoryId,
-        userId: 1
+        userId: user.id
       })
-      return res.status(201).json({ video })
+      return res.status(201).json({ video, category, user })
     }
 
     if (categoryName) {
@@ -116,9 +122,9 @@ export const postVideo = async (req: Request, res: Response) => {
         videoFilename,
         thumbFilename,
         categoryId: category.id,
-        userId: 1
+        userId: user.id
       })
-      return res.status(201).json({ video })
+      return res.status(201).json({ video, category })
     }
 
     return res
