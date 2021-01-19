@@ -9,7 +9,7 @@ export const postDeleteUser = async (req: Request, res: Response) => {
     const { userId } = req.params as UserRequestParam
     const numUserId = +userId
 
-    const user = await UserDao.getUser(numUserId)
+    const user = await UserDao.getUserById(numUserId)
 
     if(!user){
       return res.status(404).json(ResponseErrors.NOT_FOUND)

@@ -26,7 +26,8 @@ interface CreateVideoInterface {
   description: string
   videoFilename: string
   thumbFilename: string
-  categoryId: number
+  categoryId: number,
+  userId: number
 }
 
 type VideoDBResponse = Video | null

@@ -1,24 +1,29 @@
 import User from "../sqlz/models/user.model"
-import { CreateUserInterface } from "../types/user.types"
+import IUser, { CreateUserInterface } from "../types/user.types"
 
-export async function createUser(user: CreateUserInterface): Promise<any> {
+export async function createUser(user: CreateUserInterface): Promise<IUser> {
   const { nickname, email, password, } = user
 
   return User
     .create({ nickname, email, password })
 }
 
-export async function getUser(userId: number): Promise<any> {
+export async function getUser(where: object): Promise<IUser | null> {
+  return User
+    .findOne({ where })
+}
+
+export async function getUserById(userId: number): Promise<IUser | null> {
   return User
     .findByPk(userId)
 }
 
-export async function getUserByEmail(email: string) {
+export async function getUserByEmail(email: string): Promise<IUser | null> {
   return User
     .findOne({ where: { email } })
 }
 
-export async function getUserByNickname(nickname: string) {
+export async function getUserByNickname(nickname: string): Promise<IUser | null> {
   return User
     .findOne({ where: { nickname } })
 }

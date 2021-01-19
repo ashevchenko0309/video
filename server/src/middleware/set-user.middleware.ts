@@ -18,7 +18,7 @@ export async function setUser(req: Request, res: Response, next: NextFunction) {
     next()
 
   } catch (error) {
-    console.log(error)
+    console.error(error)
     res.status(500).json(ResponseErrors.SERVER_ERROR)
   }
 }

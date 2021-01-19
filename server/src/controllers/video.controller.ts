@@ -32,22 +32,10 @@ export const getVideos = async (req: Request, res: Response) => {
 
     if (category !== "0") {
       where.categoryId = +category
-      // const { rows, count } = await VideoDao.findAllByCategoryId(
-      //   +category,
-      //   pagiOption,
-      // )
-
-      // return res.status(200).json({ rows, count })
     }
 
     if (user !== "0") {
       where.userId = +user
-      // const { rows, count } = await VideoDao.findAllByUserId(
-      //   +user,
-      //   pagiOption,
-      // )
-
-      // return res.status(200).json({ rows, count })
     }
 
     const { rows, count } = await VideoDao.findAll(pagiOption, where)
@@ -115,6 +103,7 @@ export const postVideo = async (req: Request, res: Response) => {
         videoFilename,
         thumbFilename,
         categoryId: +categoryId,
+        userId: 1
       })
       return res.status(201).json({ video })
     }
@@ -127,6 +116,7 @@ export const postVideo = async (req: Request, res: Response) => {
         videoFilename,
         thumbFilename,
         categoryId: category.id,
+        userId: 1
       })
       return res.status(201).json({ video })
     }

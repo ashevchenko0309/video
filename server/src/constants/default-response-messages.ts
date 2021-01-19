@@ -1,7 +1,7 @@
 export default {
-  UNAUTHORIZED: { message: "Unauthorized" },
-  NOT_FOUND: { message: "Not found" },
-  SERVER_ERROR: { message: "Server error..." },
+  UNAUTHORIZED: { error: "Unauthorized" },
+  NOT_FOUND: { error: "Not found" },
+  SERVER_ERROR: { error: "Server error..." },
   SUCCESS: { message: "Ok" },
-  INVALID_PAGINATION: { message: "Invalid pagination options" },
+  INVALID_PAGINATION: { error: "Invalid pagination options" },
 }

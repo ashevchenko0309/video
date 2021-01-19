@@ -3,15 +3,8 @@ import { Model } from "sequelize"
 declare global {
   namespace Express {
     interface Request {
-      user: User
+      user?: User
     }
-  }
-}
-
-declare module "express-session" {
-  interface Session {
-    isLoggedIn: boolean,
-    user: User
   }
 }
 

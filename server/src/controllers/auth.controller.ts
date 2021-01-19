@@ -1,77 +1,52 @@
-import { Request, Response } from "express"
 import bcrypt from "bcrypt"
-import { validationResult } from "express-validator"
+import jwt from 'jsonwebtoken';
+import { Request, Response } from "express"
 
 import { UserDao } from "../dao"
 import ResponseErrors from "../constants/default-response-messages"
 
+import passportConfig from "../config/passport"
+
 export const postSingup = async (req: Request, res: Response) => {
   try {
-
-    const validationErrors = validationResult(req)
-
-    if (!validationErrors.isEmpty()) {
-      return res.status(422).json(validationErrors.array())
-    }
-
     const { nickname, email, password } = req.body
-
-    let user = await UserDao.getUserByNickname(nickname)
-
-    if (user) {
-      return res.status(422).json({ message: "User already exist with this nickname" })
-    }
-
-    user = await UserDao.getUserByEmail(email)
-
-    if (user) {
-      return res.status(422).json({ message: "User already exist with this email" })
-    }
+    const { secret, expiresIn } = passportConfig
 
     const hashedPassword = await bcrypt.hash(password, 12)
 
-    await UserDao.createUser({ nickname, email, password: hashedPassword })
+    const user = await UserDao.createUser({ nickname, email, password: hashedPassword })
 
-    return res.status(201).json({ message: "Ok" })
+    const token = jwt.sign({ email, id: user.id }, secret, { expiresIn })
+
+    return res.status(201).json({ id: user.id, role: user.role, token, expiresIn })
   } catch (error) {
-    console.log(error)
+    console.error(error)
     res.status(500).json(ResponseErrors.SERVER_ERROR)
   }
 }
 
 export const postLogin = async (req: Request, res: Response) => {
   try {
-    const validationErrors = validationResult(req)
-
-    if (!validationErrors.isEmpty()) {
-      return res.status(422).json(validationErrors.array())
-    }
-
     const { email, password } = req.body
+    const { secret, expiresIn } = passportConfig
     const user = await UserDao.getUserByEmail(email)
 
-    if(!user){
+    if (!user) {
       return res.status(404).json(ResponseErrors.NOT_FOUND)
     }
 
     const isMatch = bcrypt.compare(password, user.password)
 
     if (isMatch) {
-      req.session.isLoggedIn = true
-      req.session.user = user
-      return req.session.save(function (error) {
-        if (error) {
-          console.error(error)
-          return res.status(500).json(ResponseErrors.SERVER_ERROR)
-        }
-        res.status(200).json({ message: "Ok" })
-      })
+      const token = jwt.sign({ email }, secret, { expiresIn })
+
+      return res.status(200).json({ id: user.id, role: user.role, token, expiresIn })
     }
 
     return res.status(401).json(ResponseErrors.UNAUTHORIZED)
 
   } catch (error) {
-    console.log(error)
+    console.error(error)
     res.status(500).json(ResponseErrors.SERVER_ERROR)
   }
 }

@@ -2,7 +2,9 @@ import express from "express"
 import bodyParser from "body-parser"
 import path from "path"
 import cors from "cors"
-import session from "express-session"
+import passport from "passport"
+
+import applyPassportStrategy from "./util/passport"
 
 import sequelize from "./sqlz/models"
 
@@ -10,7 +12,6 @@ import apiRoutes from "./routes/api.routes"
 
 const CLIENT_FOLDER = path.join(__dirname, "..", "..", "client", "build")
 const CACHE_TIME = 86400000 * 30
-const SESSION_SECRET = "FjfgT9j4mWMS8VQ5zWJSarLChRNuX99d"
 
 const app = express()
 
@@ -20,13 +21,7 @@ if (process.env.NODE_ENV === "development") {
   app.use(cors())
 }
 
-app.use(
-  session({
-    secret: SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
-  })
-)
+applyPassportStrategy(passport)
 
 app.use(express.static(CLIENT_FOLDER))
 
