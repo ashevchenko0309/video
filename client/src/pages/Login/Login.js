@@ -11,6 +11,8 @@ import FormErrorHint from "../../components/FormErrorHints/FormErrorHint"
 
 import { UserContext } from "../../context/userContext"
 
+import responseErrorHandler from "../../utils/responseErrorHandler"
+
 import LOGIN_FORM_SCHEMA from "./login-from.schema"
 
 /* eslint-disable react/jsx-props-no-spreading */
@@ -101,11 +103,7 @@ class Login extends React.Component {
       const data = await response.json()
 
       if (status !== 200) {
-        if (status === 404) {
-          this.setState({ formError: data.error })
-        } else if (status === 422) {
-          this.setState({ formError: data.errors.map((e) => e.msg).join(";") })
-        }
+        this.setState({ formError: responseErrorHandler(status, data) })
         return null
       }
 
@@ -118,29 +116,17 @@ class Login extends React.Component {
   }
 
   onFulfilledPost = (data) => {
-    console.log(data)
-    if (data.errors && data.errors.length) {
-      return this.setState({
-        formError: data.errors
-          .map((error) => `${error.param} - ${error.msg}`)
-          .join("; "),
-      })
-    }
-
-    this.setLoginData(data)
-
-    const { history } = this.props
-
-    return history.replace("/")
-  }
-
-  setLoginData = (data) => {
     const { token, expiresIn, role } = data
     const [, setRole] = this.context
 
     localStorage.setItem("token", JSON.stringify({ token, expiresIn }))
     localStorage.setItem("role", role)
+
     setRole(role)
+
+    const { history } = this.props
+
+    return history.replace("/")
   }
 
   render() {
