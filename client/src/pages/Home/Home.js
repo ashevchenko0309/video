@@ -46,7 +46,6 @@ function Home() {
         setUserFilter(+user)
       }
     } else {
-      console.log("no search")
       setCategoryFilter(0)
       setUserFilter(0)
     }
@@ -59,7 +58,6 @@ function Home() {
     fetch(apiUrl)
       .then((response) => response.json())
       .then((data) => {
-        console.log(data)
         setTotalVideos(data.count)
         setInitVideos([...data.rows])
         setIsLoading(false)

@@ -16,6 +16,7 @@ function InputField({
   hasError,
   delay,
   errorMessage,
+  showHint,
   onChange,
   onBlur,
 }) {
@@ -53,9 +54,12 @@ function InputField({
           {labelText}
           {isRequired && <span className="is-required"> *</span>}
         </span>
-        <span className="input_field--hint">
-          {inputValue.length} / {validationOptions.maxLength}
-        </span>
+        {showHint && (
+          <span className="input_field--hint">
+            {inputValue.length} / {validationOptions.maxLength}
+          </span>
+        )}
+
         <input
           type={type}
           className="form_field--input"
@@ -79,11 +83,12 @@ InputField.propTypes = {
   defaultValue: PropTypes.string,
   placeholder: PropTypes.string,
   labelText: PropTypes.string,
-  errorMessage: PropTypes.string,
   isRequired: PropTypes.bool,
+  options: PropTypes.shape({}),
   hasError: PropTypes.bool,
   delay: PropTypes.number,
-  options: PropTypes.shape({}),
+  showHint: PropTypes.bool,
+  errorMessage: PropTypes.string,
   onChange: PropTypes.func,
   onBlur: PropTypes.func,
 }
@@ -97,6 +102,7 @@ InputField.defaultProps = {
   isRequired: false,
   options: null,
   hasError: false,
+  showHint: true,
   delay: 150,
   errorMessage: "",
   onChange: () => {},

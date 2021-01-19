@@ -6,6 +6,8 @@ import Video from "./pages/Video/Video"
 import VideoFrom from "./pages/VideoForm/VideoForm"
 
 import Login from "./pages/Login/Login"
+import Signup from "./pages/Signup/Signup"
+import Logout from "./pages/Logout/Logout"
 
 /* eslint-disable react/jsx-props-no-spreading */
 const routes = [
@@ -25,6 +27,14 @@ const routes = [
   {
     path: "/login",
     component: Login,
+  },
+  {
+    path: "/logout",
+    component: Logout,
+  },
+  {
+    path: "/register",
+    component: Signup,
   },
 ]
 

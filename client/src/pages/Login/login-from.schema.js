@@ -8,12 +8,13 @@ const FORM_SCHEMA = {
     options: null,
   },
   password: {
+    type: "password",
     name: "password",
     labelText: "Password",
     placeholder: "Password",
     isRequired: true,
     options: {
-      minLength: 5,
+      minLength: 8,
       maxLength: 64,
     },
   },

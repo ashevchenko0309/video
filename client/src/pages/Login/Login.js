@@ -9,6 +9,8 @@ import Column from "../../components/Grid/Column"
 import InputField from "../../components/InputField/InputField"
 import FormErrorHint from "../../components/FormErrorHints/FormErrorHint"
 
+import { UserContext } from "../../context/userContext"
+
 import LOGIN_FORM_SCHEMA from "./login-from.schema"
 
 /* eslint-disable react/jsx-props-no-spreading */
@@ -34,6 +36,24 @@ class Login extends React.Component {
       min: LOGIN_FORM_SCHEMA.password.options.minLength,
       max: LOGIN_FORM_SCHEMA.password.options.maxLength,
     })
+
+    if (!emailValidationResult) {
+      this.setState({
+        email: {
+          hasError: true,
+          errorMessage: "Email field is invalid",
+        },
+      })
+    }
+
+    if (!passwordValidationResult) {
+      this.setState({
+        password: {
+          hasError: true,
+          errorMessage: `Password field is invalid. Min length: ${LOGIN_FORM_SCHEMA.password.options.minLength}, max length: ${LOGIN_FORM_SCHEMA.password.options.maxLength}`,
+        },
+      })
+    }
 
     if (!emailValidationResult || !passwordValidationResult) {
       return false
@@ -63,20 +83,42 @@ class Login extends React.Component {
     return this.onPostData(JSON.stringify({ email, password }))
   }
 
-  onPostData = (body) => {
-    fetch(`${process.env.REACT_APP_API_HOST}/auth/login`, {
-      method: "POST",
-      body,
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => response.json())
-      .then(this.onFulfilledPost)
-      .catch((error) => console.error(error))
+  onPostData = async (body) => {
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_HOST}/auth/login`,
+        {
+          method: "POST",
+          body,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      )
+
+      const { status } = response
+
+      const data = await response.json()
+
+      if (status !== 200) {
+        if (status === 404) {
+          this.setState({ formError: data.error })
+        } else if (status === 422) {
+          this.setState({ formError: data.errors.map((e) => e.msg).join(";") })
+        }
+        return null
+      }
+
+      this.onFulfilledPost(data)
+      return null
+    } catch (error) {
+      console.error(error)
+      return null
+    }
   }
 
   onFulfilledPost = (data) => {
+    console.log(data)
     if (data.errors && data.errors.length) {
       return this.setState({
         formError: data.errors
@@ -85,9 +127,20 @@ class Login extends React.Component {
       })
     }
 
+    this.setLoginData(data)
+
     const { history } = this.props
 
     return history.replace("/")
+  }
+
+  setLoginData = (data) => {
+    const { token, expiresIn, role } = data
+    const [, setRole] = this.context
+
+    localStorage.setItem("token", JSON.stringify({ token, expiresIn }))
+    localStorage.setItem("role", role)
+    setRole(role)
   }
 
   render() {
@@ -101,11 +154,13 @@ class Login extends React.Component {
               <h2>Create new video</h2>
               <InputField
                 {...LOGIN_FORM_SCHEMA.email}
+                showHint={false}
                 errorMessage={email.errorMessage}
                 hasError={email.hasError}
               />
               <InputField
                 {...LOGIN_FORM_SCHEMA.password}
+                showHint={false}
                 errorMessage={password.errorMessage}
                 hasError={password.hasError}
               />
@@ -124,5 +179,7 @@ class Login extends React.Component {
 Login.propTypes = {
   history: ReactRouterPropTypes.history.isRequired,
 }
+
+Login.contextType = UserContext
 
 export default Login

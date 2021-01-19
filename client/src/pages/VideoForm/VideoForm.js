@@ -46,9 +46,6 @@ class VideoFrom extends React.Component {
       min: FORM_SCHEMA.title.options.minLength,
       max: FORM_SCHEMA.title.options.maxLength,
     })
-    /* eslint-disable no-debugger */
-    debugger
-    console.log(titleValidationResult)
     const descriptionValidationResult = validator.isLength(description, {
       min: FORM_SCHEMA.description.options.minLength,
       max: FORM_SCHEMA.description.options.maxLength,
